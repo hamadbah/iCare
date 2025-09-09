@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Edit Profile</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn">Save</button>
+  </form>
+  <script>
+    let selectEl = document.getElementById('id_role');
+    M.FormSelect.init(selectEl);
+</script>
+{% endblock %}

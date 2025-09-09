@@ -16,11 +16,22 @@
         <nav>
             <div class="nav-wrapper indigo darken-4">
                 <ul>
-                    <li><a href="{% url 'home' %}" class="left brand-logo">&nbsp;&nbsp;&nbsp;iCare</a></li>
+                    <li>
+                    <a href="{% url 'home' %}" class="left brand-logo">
+                        &nbsp;&nbsp;&nbsp;iCare,
+                        {% if user.is_authenticated %}
+                        {{ user.username|upper }}
+                        {% else %}
+                        Guest
+                        {% endif %}
+                    </a>
+                    </li>
                 </ul>
                 <ul class="right">
                     <li><a href="{% url 'about' %}">About</a></li>
-                     {% if user.is_authenticated %}
+                    {% if user.is_authenticated %}
+                    <li><a href="{% url 'profile' %}">My Profile</a></li>
+                    <li><a href="{% url 'edit_profile' %}">Edit Profile</a></li>
                     <li>
                         <form method="post" action="{% url 'logout' %}">
                             {% csrf_token %}
