@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3 style="font-weight: bolder;">Delete Appointment</h3>
+<p>Are you sure you want to delete this appointment?</p>
+<ul>
+    <li>Date: {{ object.appointment_date }}</li>
+    <li>Time: {{ object.appointment_time }}</li>
+    <li>Doctor Code: {{ object.doctor_code }}</li>
+</ul>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn red" style="text-transform:none;">Delete</button>
+    <a href="{% url 'detail' object.patient.id %}" class="btn grey" style="text-transform:none;">Cancel</a>
+</form>
+{% endblock %}

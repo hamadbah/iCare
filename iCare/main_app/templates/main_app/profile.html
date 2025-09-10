@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h2>{{ request.user.username }}'s Profile</h2>
+  <h3 style="font-weight: bolder;">{{ request.user.username|upper }}'s Profile</h2>
   <p><strong>Role:</strong> {{ profile.role|capfirst }}</p>
   <p><strong>Full Name:</strong> {{ profile.fullname }}</p>
   <p><strong>Phone:</strong> {{ profile.phone }}</p>

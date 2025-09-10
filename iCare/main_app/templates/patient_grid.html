@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iCare System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</head>
+
+<body>
+    <header class="navbar-fixed">
+        <nav>
+            <div class="nav-wrapper indigo darken-4">
+                <ul>
+                    <li><a href="{% url 'home' %}" class="left brand-logo">&nbsp;&nbsp;&nbsp;iCare</a></li>
+                </ul>
+                <ul class="right">
+                    <li><a href="{% url 'about' %}">About</a></li>
+                    <li><a href="{% url 'patient_create' %}">Add Patient</a></li>
+                    <li><a href="{% url 'index' %}">View All Patients</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <main class="">
+        {%block content %}
+        {% endblock %}
+    </main>
+    <footer class="page-footer indigo darken-4">
+        <div class="right">All Right Reserved, &copy; 2025 iCare &nbsp;</div>
+    </footer>
+</body>
+
+</html>

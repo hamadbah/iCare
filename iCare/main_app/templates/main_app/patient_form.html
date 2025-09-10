@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+{% if object %}
+<h3 style="font-weight: bolder;">Edit <span class="teal-text">{{object.patient_name}}</span></h3>
+{% else %}
+<h3 style="font-weight: bolder;">Add Patient</h3>
+{% endif %}
+<form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <table style="margin-bottom: 20px;">
+        {{ form.as_table }}
+    </table>
+    <div style="text-align: center;">
+        <input type="submit" value="Submit!" style="text-transform:none; width: 200px; max-width: 100%;" class="btn">
+        <a href="{% url 'index' %}" class="btn grey"
+            style="text-transform:none; width: 200px; max-width: 100%;">Back</a>
+    </div>
+</form>
+<script>
+    var dateEl = document.getElementById('id_date_of_birth');
+    M.Datepicker.init(dateEl, {
+        format: 'yyyy-mm-dd',
+        autoClose: true
+    });
+    let selectEl = document.getElementById('id_gender');
+    M.FormSelect.init(selectEl);
+</script>
+{% endblock %}

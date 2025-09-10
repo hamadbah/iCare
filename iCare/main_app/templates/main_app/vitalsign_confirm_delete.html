@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+<p style="color: red; font-weight: bold; font-size: x-large;">Are you sure you want to delete these Vitals?</p>
+<ul>
+    <li>Temperature: 
+        {% if object.temperature %}
+        {{ object.temperature }}
+        {% else %}
+        -
+        {% endif %}
+    </li>
+    <li>Heart Rate: 
+        {% if object.heart_rate %}
+        {{ object.heart_rate }}
+        {% else %}
+        -
+        {% endif %}
+    </li>
+    <li>Resporatory Rate: 
+        {% if object.respiratory_rate %}
+        {{ object.respiratory_rate }}
+        {% else %}
+        -
+        {% endif %}
+    </li>
+    <li>Blood Pressure:
+        {% if object.systolic_bp and object.diastolic_bp %}
+        {{ object.systolic_bp }}/{{ object.diastolic_bp }} mmHg
+        {% else %}
+        -
+        {% endif %}
+    </li>
+</ul>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn red" style="text-transform:none;">Delete</button>
+    <a href="{% url 'appointment_detail' object.appointment.id %}" class="btn grey" style="text-transform:none;">Cancel</a>
+</form>
+{% endblock %}

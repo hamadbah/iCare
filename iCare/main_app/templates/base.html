@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iCare Electronic Medical Record</title>
+    <title>iCare System</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
@@ -17,21 +17,27 @@
             <div class="nav-wrapper indigo darken-4">
                 <ul>
                     <li>
-                    <a href="{% url 'home' %}" class="left brand-logo">
-                        &nbsp;&nbsp;&nbsp;iCare,
-                        {% if user.is_authenticated %}
-                        {{ user.username|upper }}
-                        {% else %}
-                        Guest
-                        {% endif %}
-                    </a>
+                        <a href="{% url 'home' %}" class="left brand-logo">
+                            &nbsp;&nbsp;&nbsp;iCare,
+                            {% if user.is_authenticated %}
+                            {{ user.username|upper }}
+                            {% else %}
+                            Guest
+                            {% endif %}
+                        </a>
                     </li>
                 </ul>
                 <ul class="right">
                     <li><a href="{% url 'about' %}">About</a></li>
                     {% if user.is_authenticated %}
+                    {% if user.profile.role == 'clerk' %}
+                    <li><a href="{% url 'patient_create' %}">Add Patient</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'index' %}">View All Patients</a></li>
                     <li><a href="{% url 'profile' %}">My Profile</a></li>
-                    <li><a href="{% url 'edit_profile' %}">Edit Profile</a></li>
+                    {% if user.profile.role == 'doctor' %}
+                    <li><a href="{% url 'doctor_chat' %}">Doctor AI Assistant</a></li>
+                    {% endif %}
                     <li>
                         <form method="post" action="{% url 'logout' %}">
                             {% csrf_token %}

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<p style="color: red; font-weight: bold; font-size: x-large;">Are you sure you want to delete these Notes?</p>
+<ul>
+    <li>Subjective: 
+        {% if object.subjective %}
+        {{ object.subjective }}
+        {% else %}
+        -
+        {% endif %}
+    </li>
+    <li>Objective: 
+        {% if object.objective %}
+        {{ object.objective }}
+        {% else %}
+        -
+        {% endif %}
+    </li>
+    <li>Plan: 
+        {% if object.plan %}
+        {{ object.plan }}
+        {% else %}
+        -
+        {% endif %}
+    </li>
+</ul>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn red" style="text-transform:none;">Delete</button>
+    <a href="{% url 'appointment_detail' object.appointment.id %}" class="btn grey" style="text-transform:none;">Cancel</a>
+</form>
+{% endblock %}

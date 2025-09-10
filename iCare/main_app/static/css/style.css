@@ -17,3 +17,86 @@ body {
     display: flex;
     justify-content: space-between;
   }
+
+.patient-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f4f4f4;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+}
+
+.patient-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.patient-summary h3 {
+    margin: 0;
+}
+
+.card-image img {
+    max-width: 150px;
+    height: 180px;
+    border-radius: 8px;
+    object-fit: cover; 
+}
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 20px;
+}
+.card {
+    background: #fff;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
+}
+h2 { 
+    margin-top: 0; 
+}
+
+.tabs {
+  background: transparent;
+}
+
+.tabs .tab {
+  background-color: #2196f3;
+  border-radius: 5px 5px 0 0;
+  margin-right: 5px;
+}
+
+.tabs .tab a {
+  color: white;
+  display: block;
+}
+
+.tabs .tab a:hover {
+  background-color: #1976d2;
+  color: white;
+}
+
+.tabs .tab a.active {
+  background-color: #1565c0;
+  color: white;
+}
+
+.tabs .indicator {
+  display: none;
+}
+
+.carousel.carousel-slider {
+    height: 300px !important;
+}
+
+.carousel.carousel-slider .carousel-item img {
+    height: 300px;
+    width: 100%;
+    object-fit: cover; /* makes image fill while keeping proportions */
+}

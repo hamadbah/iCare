@@ -1,3 +1,4 @@
+from django.contrib import admin
 from django.urls import path
 from . import views
 
@@ -5,7 +6,31 @@ urlpatterns = [
     path('', views.home, name = 'home'),
     path('about/', views.about, name = 'about'),
     path('accounts/signup/', views.signup, name='signup'),
-    
     path('profile/', views.profile_view, name='profile'),
     path('profile/edit/', views.edit_profile, name='edit_profile'),
+    path('patients/', views.patients_index, name='index'),
+    path('patients/<int:patient_id>/', views.patient_detail, name='detail'),
+    path('patients/create', views.PatientCreate.as_view(), name='patient_create'),
+    path('patients/<int:pk>/update/', views.PatientUpdate.as_view(), name='patient_update'),
+    path('patients/<int:pk>/delete/', views.PatientDelete.as_view(), name='patient_delete'),
+    path('patients/<int:patient_id>/add_appointment/', views.add_appointment, name='add_appointment'),
+    path('appointment/<int:appointment_id>/', views.appointment_detail, name='appointment_detail'),
+    path('appointment/<int:pk>/delete/', views.AppointmentDelete.as_view(), name='appointment-delete'),
+    path('vital/<int:appointment_id>/add-vitals/', views.add_vitals, name='add-vitals'),
+    path('vital/<int:pk>/delete/', views.VitalSignDelete.as_view(), name='vital-delete'),
+    path('vital/<int:pk>/update/', views.VitalSignUpdate.as_view(), name='vital-update'),
+    path('doctor/<int:appointment_id>/add-notes/', views.add_notes, name='add_notes'),
+    path('doctor/<int:pk>/delete/', views.DoctorNoteDelete.as_view(), name='note-delete'),
+    path('doctor/<int:pk>/update/', views.DoctorNoteUpdate.as_view(), name='note-update'),
+    path('prescription/<int:appointment_id>/add-prescriptions/', views.add_prescriptions, name='add_prescriptions'),
+    path('prescription/<int:pk>/delete/', views.PrescriptionDelete.as_view(), name='prescription-delete'),
+    path('prescription/<int:pk>/update/', views.PrescriptionUpdate.as_view(), name='prescription-update'),
+    path('labs/<int:appointment_id>/add-lab/', views.add_lab, name='add_lab'),
+    path('labs/<int:pk>/delete/', views.LabDelete.as_view(), name='lab-delete'),
+    path('labs/<int:pk>/update/', views.LabUpdate.as_view(), name='lab-update'),
+    path('diagnosis/<int:appointment_id>/add-diagnosis/', views.add_diagnosis, name='add_diagnosis'),
+    path('diagnosis/<int:pk>/delete/', views.DiagnosisDelete.as_view(), name='diagnosis-delete'),
+    path('diagnosis/<int:pk>/update/', views.DiagnosisUpdate.as_view(), name='diagnosis-update'),   
+    path('patients/<int:patient_id>/summary/', views.patient_summary, name='patient_summary'),
+    path("doctor-chat/", views.doctor_chat, name="doctor_chat"),
 ]

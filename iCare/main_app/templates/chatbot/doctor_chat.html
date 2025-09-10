@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3 style="font-weight: bolder;">Doctor AI Assistant</h3>
+<form method="post" id="doctorForm">
+    {% csrf_token %}
+    <textarea style="height: 180px; resize: vertical; font-size: x-large;" placeholder="Ask your question here." name="question" id="question" required></textarea><br><br>
+    <button class="btn blue" style="text-transform:none; width: 200px; font-size: larger;" type="submit">Ask</button>
+    <button class="btn red" style="text-transform:none; width: 200px; font-size: larger;" type="button" id="clearBtn">Clear</button>
+</form>
+
+{% if answer %}
+<div class="answer">
+    <p style="font-size:larger;">{{ answer }}</p>
+</div>
+{% endif %}
+
+<script>
+document.getElementById('clearBtn').addEventListener('click', function() {
+    document.getElementById('question').value = '';
+    const answerDiv = document.querySelector('.answer');
+    if(answerDiv) answerDiv.remove();
+});
+</script>
+{% endblock %}

@@ -1,0 +1,321 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+<h3 class="center-align" style="font-weight: bold;">Appointment Details</h3>
+<div class="flex-container" style="display: flex; gap: 20px; flex-wrap: wrap;">
+    <div class="card-content">
+        <p><strong>Name:</strong> {{ patient.patient_name }} - <strong>National ID:</strong> {{ patient.national_id }}
+            - <strong>DOB:</strong> {{ patient.date_of_birth }} - <strong>Gender:</strong> {{ patient.gender }}
+            - <strong>Phone:</strong> {{ patient.phone }} </p>
+        <hr />
+        <p><strong>Date:</strong> {{ appointment.appointment_date }} - <strong>Time:</strong> {{ appointment.appointment_time }} <strong>Doctor Code:</strong> {{ appointment.doctor_code }}
+            - <strong>Visit Type:</strong> {{ appointment.visit_type }} - <strong>Status:</strong> {{ appointment.status }}</p>
+    </div>
+    <div>
+        {% load static %}
+        <img src="{% static patient.image|cut:'main_app/static/' %}" alt="{{ patient.patient_name }}"
+            style="max-width: 150px; height: 80px; border-radius: 8px;" />
+    </div>
+    <div>
+        <a href="{% url 'detail' patient.id %}" class="btn grey" style="margin-top: 20px;">⬅ Back to Patient</a>
+    </div>
+</div>
+<div class="row">
+    <div class="col s12">
+        <ul class="tabs">
+            <li class="tab col s2"><a href="#notes">Doctor Notes</a></li>
+            <li class="tab col s2"><a href="#vitals">Vitals</a></li>
+            <li class="tab col s2"><a href="#labs">Labs</a></li>
+            <li class="tab col s2"><a href="#prescriptions">Prescriptions</a></li>
+            <li class="tab col s2"><a href="#diagnosis">Diagnosis</a></li>
+        </ul>
+    </div>
+</div>
+<div id="notes" class="col s12">
+    {% if user.is_authenticated %}
+    {% if user.profile.role == 'doctor' %}
+    <a class="btn green modal-trigger" href="#doctornoteModal">➕ Doctor Notes</a>
+    {% endif %}
+    {% endif %}
+    <table class="striped highlight responsive-table">
+        <thead>
+            <tr>
+                <th>Subjective</th>
+                <th>Objective</th>
+                <th>Plan</th>
+                {% if user.is_authenticated %}
+                {% if user.profile.role == 'doctor' %}
+                <th>Edit</th>
+                <th>Delete</th>
+                {% endif %}
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for notes in appointment.doctornote_set.all %}
+            <tr>
+                <td>{{ notes.subjective|default:"-" }}</td>
+                <td>{{ notes.objective|default:"-" }}</td>
+                <td>{{ notes.plan|default:"-" }}</td>
+                {% if user.is_authenticated %}
+                {% if user.profile.role == 'doctor' %}
+                <td><a href="{% url 'note-update' notes.id %}" class="btn white">✏️</a></td>
+                <td><a href="{% url 'note-delete' notes.id %}" class="btn white">❌</a></td>
+                {% endif %}
+                {% endif %}
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">No notes recorded yet</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div id="vitals" class="col s12">
+    <a class="btn green modal-trigger" href="#vitalModal">➕ Vitals</a>
+    <table class="striped highlight responsive-table">
+        <thead>
+            <tr>
+                <th>Temperature</th>
+                <th>Heart Rate</th>
+                <th>Respiratory Rate</th>
+                <th>Blood Pressure</th>
+                <th>O₂ Saturation</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for vitals in appointment.vitalsign_set.all %}
+            <tr>
+                <td>{{ vitals.temperature|default:"-" }} °C</td>
+                <td>{{ vitals.heart_rate|default:"-" }} bpm</td>
+                <td>{{ vitals.respiratory_rate|default:"-" }} /min</td>
+                <td>
+                    {% if vitals.systolic_bp and vitals.diastolic_bp %}
+                    {{ vitals.systolic_bp }}/{{ vitals.diastolic_bp }} mmHg
+                    {% else %}
+                    -
+                    {% endif %}
+                </td>
+                <td>{{ vitals.oxygen_saturation|default:"-" }} %</td>
+                <td><a href="{% url 'vital-update' vitals.id %}" class="btn white">✏️</a></td>
+                <td><a href="{% url 'vital-delete' vitals.id %}" class="btn white">❌</a></td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7">No vitals recorded yet</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div id="labs" class="col s12">
+    <a class="btn green modal-trigger" href="#labModal">➕ Lab</a>
+    <table class="striped highlight responsive-table">
+        <thead>
+            <tr>
+                <th>Test Name</th>
+                <th>Date</th>
+                <th>Result</th>
+                <th>Status</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for labs in appointment.lab_set.all %}
+            <tr>
+                <td>{{ labs.test_name|default:"-" }}</td>
+                <td>{{ labs.test_date|default:"-" }}</td>
+                <td>{{ labs.result|default:"-" }}</td>
+                <td>{{ labs.status|default:"-" }}</td>
+                <td><a href="{% url 'lab-update' labs.id %}" class="btn white">✏️</a></td>
+                <td><a href="{% url 'lab-delete' labs.id %}" class="btn white">❌</a></td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6">No labs requested yet</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div id="prescriptions" class="col s12">
+    {% if user.is_authenticated %}
+    {% if user.profile.role == 'doctor' %}
+    <a class="btn green modal-trigger" href="#prescriptionModal">➕ Prescriptions</a>
+    {% endif %}
+    {% endif %}
+    <table class="striped highlight responsive-table">
+        <thead>
+            <tr>
+                <th>Drug Name</th>
+                <th>Dosage</th>
+                <th>Frequency</th>
+                <th>Duration</th>
+                {% if user.is_authenticated %}
+                {% if user.profile.role == 'doctor' %}
+                <th>Edit</th>
+                <th>Delete</th>
+                {% endif %}
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for prescriptions in appointment.prescription_set.all %}
+            <tr>
+                <td>{{ prescriptions.drug_name|default:"-" }}</td>
+                <td>{{ prescriptions.dosage|default:"-" }}</td>
+                <td>{{ prescriptions.frequency|default:"-" }}</td>
+                <td>{{ prescriptions.duration|default:"-" }}</td>
+                {% if user.is_authenticated %}
+                {% if user.profile.role == 'doctor' %}
+                <td><a href="{% url 'prescription-update' prescriptions.id %}" class="btn white">✏️</a></td>
+                <td><a href="{% url 'prescription-delete' prescriptions.id %}" class="btn white">❌</a></td>
+                {% endif %}
+                {% endif %}
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6">No drug prescribed yet</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div id="diagnosis" class="col s12">
+    {% if user.is_authenticated %}
+    {% if user.profile.role == 'doctor' %}
+    <a class="btn green modal-trigger" href="#diagnosisModal">➕ Diagnosis</a>
+    {% endif %}
+    {% endif %}
+    <table class="striped highlight responsive-table">
+        <thead>
+            <tr>
+                <th>Diagnosis Name</th>
+                <th>Date</th>
+                <th>Status</th>
+                {% if user.is_authenticated %}
+                {% if user.profile.role == 'doctor' %}
+                <th>Edit</th>
+                <th>Delete</th>
+                {% endif %}
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for diagnosis in appointment.diagnosis_set.all %}
+            <tr>
+                <td>{{ diagnosis.diagnosis_name|default:"-" }}</td>
+                <td>{{ diagnosis.diagnosis_date|default:"-" }}</td>
+                <td>{{ diagnosis.diagnosis_status|default:"-" }}</td>
+                <td><a href="{% url 'diagnosis-update' diagnosis.id %}" class="btn white">✏️</a></td>
+                <td><a href="{% url 'diagnosis-delete' diagnosis.id %}" class="btn white">❌</a></td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6">No diagnosis yet</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div id="vitalModal" class="modal">
+    <div class="modal-content">
+        <h4>Add Vital Sign</h4>
+        <form id="vitalForm" action="{% url 'add-vitals' appointment.id %}" method="post">
+            {% csrf_token %}
+            {{ vitalsign_form.as_p }}
+            <div class="modal-footer" style="margin-top:15px;">
+                <button type="submit" class="btn blue" style="text-transform:none;">Save</button>
+                <a href="#!" class="modal-close btn grey" style="text-transform:none;">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+<div id="doctornoteModal" class="modal">
+    <div class="modal-content">
+        <h4>Add Doctor Note</h4>
+        <form id="doctornoteForm" action="{% url 'add_notes' appointment.id %}" method="post">
+            {% csrf_token %}
+            {{ doctornote_form.as_p }}
+            <div class="modal-footer" style="margin-top:15px;">
+                <button type="submit" class="btn blue" style="text-transform:none;">Save</button>
+                <a href="#!" class="modal-close btn grey" style="text-transform:none;">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+<div id="prescriptionModal" class="modal">
+    <div class="modal-content">
+        <h4>Add Prescription</h4>
+        <form id="prescriptionForm" action="{% url 'add_prescriptions' appointment.id %}" method="post">
+            {% csrf_token %}
+            {{ prescription_form.as_p }}
+            <div class="modal-footer" style="margin-top:15px;">
+                <button type="submit" class="btn blue" style="text-transform:none;">Save</button>
+                <a href="#!" class="modal-close btn grey" style="text-transform:none;">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+<div id="labModal" class="modal">
+    <div class="modal-content">
+        <h4>Add Lab</h4>
+        <form id="labForm" action="{% url 'add_lab' appointment.id %}" method="post">
+            {% csrf_token %}
+            {{ lab_form.as_p }}
+            <div class="modal-footer" style="margin-top:15px;">
+                <button type="submit" class="btn blue" style="text-transform:none;">Save</button>
+                <a href="#!" class="modal-close btn grey" style="text-transform:none;">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+<div id="diagnosisModal" class="modal">
+    <div class="modal-content">
+        <h4>Add Diagnosis</h4>
+        <form id="diagnosisForm" action="{% url 'add_diagnosis' appointment.id %}" method="post">
+            {% csrf_token %}
+            {{ diagnosis_form.as_p }}
+            <div class="modal-footer" style="margin-top:15px;">
+                <button type="submit" class="btn blue" style="text-transform:none;">Save</button>
+                <a href="#!" class="modal-close btn grey" style="text-transform:none;">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var elems = document.querySelectorAll('.modal');
+        M.Modal.init(elems);
+
+        var tabs = document.querySelectorAll('.tabs');
+        M.Tabs.init(tabs);
+
+        var dateEl = document.getElementById('id_test_date');
+        if (dateEl) {
+            M.Datepicker.init(dateEl, { format: 'yyyy-mm-dd', autoClose: true });
+        }
+
+        let selectEl = document.getElementById('id_status');
+        if (selectEl) {
+            M.FormSelect.init(selectEl);
+        }
+
+        var diagDateEl = document.getElementById('id_diagnosis_date');
+        if (diagDateEl) {
+            M.Datepicker.init(diagDateEl, { format: 'yyyy-mm-dd', autoClose: true });
+        }
+
+        let diagSelectEl = document.getElementById('id_diagnosis_status');
+        if (diagSelectEl) {
+            M.FormSelect.init(diagSelectEl);
+        }
+    });
+</script>
+{% endblock %}

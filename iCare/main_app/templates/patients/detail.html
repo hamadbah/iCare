@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3 style="font-weight: bolder;">Patient Details</h3>
+<div class="card">
+    <div class="card-content">
+        <div class="flex-container" style="display:flex; justify-content:space-between; align-items:flex-start;">
+            <div>
+                <a href="{% url 'detail' patient.id %}">
+                    <span class="card-title">{{ patient.patient_name }}</span>
+                </a>
+                <p>National ID: {{ patient.national_id }}</p>
+                <p>Date of Birth: {{ patient.date_of_birth }}</p>
+                <p>Gender: {{ patient.gender }}</p>
+                <p>Phone: {{ patient.phone }}</p>
+                <p>Address: {{ patient.address }}</p>
+            </div>
+            <div class="card-image">
+                {% load static %}
+                <img src="{% static patient.image|cut:'main_app/static/' %}" alt="{{ patient.patient_name }}"
+                    style="max-width: 150px; height: 180px; border-radius: 8px;" />
+            </div>
+        </div>
+    </div>
+    <div class="card-action">
+        {% if user.is_authenticated %}
+        {% if user.profile.role == 'clerk' %}
+        <a href="{% url 'patient_update' patient.id %}" class="btn blue" style="text-transform:none;">Edit</a>
+        <a href="{% url 'patient_delete' patient.id %}" class="btn red" style="text-transform:none;">Delete</a>
+        <a href="{% url 'index' %}" class="btn grey" style="text-transform:none;">Back</a>
+        <a class="btn modal-trigger" href="#appointmentModal" style="text-transform:none;">Add Appointment</a>
+        {% endif %}
+        {% if user.profile.role == 'doctor' or user.profile.role == 'nurse' %}
+        <a href="{% url 'patient_summary' patient.id %}" class="btn blue" style="text-transform:none;">View Patient
+            Summary</a>
+        {% endif %}
+        {% endif %}
+
+
+    </div>
+</div>
+<div style="max-height: 300px; overflow-y: auto;">
+    <table class="striped">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Doctor Code</th>
+                <th>Visit Type</th>
+                <th>Status</th>
+                {% if user.is_authenticated %}
+                {% if user.profile.role == 'doctor' or user.profile.role == 'nurse' %}
+                <th>View</th>
+                {% endif %}
+                {% endif %}
+                {% if user.is_authenticated %}
+                {% if user.profile.role == 'clerk' %}
+                <th>Delete</th>
+                {% endif %}
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for appointment in patient.appointment_set.all %}
+            <tr>
+                <td>{{ appointment.appointment_date }}</td>
+                <td>{{ appointment.appointment_time }}</td>
+                <td>{{ appointment.doctor_code }}</td>
+                <td>{{ appointment.visit_type }}</td>
+                <td>{{ appointment.status }}</td>
+                {% if user.is_authenticated %}
+                {% if user.profile.role == 'doctor' or user.profile.role == 'nurse' %}
+                <td>
+                    <a href="{% url 'appointment_detail' appointment.id %}" class="btn white">➡️</a>
+                </td>
+                {% endif %}
+                {% endif %}
+                {% if user.is_authenticated %}
+                {% if user.profile.role == 'clerk' %}
+                <td>
+                    <a href="{% url 'appointment-delete' appointment.id %}" class="btn white"
+                        style="text-transform:none;">❌</a>
+                </td>
+                {% endif %}
+                {% endif %}
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6">No Appointments yet</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div id="appointmentModal" class="modal">
+    <div class="modal-content">
+        <h4>Add Appointment</h4>
+        <form id="appointmentForm" action="{% url 'add_appointment' patient.id %}" method="post">
+            {% csrf_token %}
+            {{ appointment_form.as_p }}
+            <div class="modal-footer" style="margin-top:15px;">
+                <button type="submit" class="btn blue" style="text-transform:none;">Book Appointment</button>
+                <a href="#!" class="modal-close btn grey" style="text-transform:none;">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var modalElems = document.querySelectorAll('.modal');
+        M.Modal.init(modalElems);
+        var dateEl = document.getElementById('id_appointment_date');
+        if (dateEl) {
+            M.Datepicker.init(dateEl, {
+                format: 'yyyy-mm-dd',
+                defaultDate: new Date(),
+                setDefaultDate: true,
+                autoClose: true
+            });
+        }
+        var timeEl = document.getElementById('id_appointment_time');
+        if (timeEl) {
+            M.Timepicker.init(timeEl, {
+                twelveHour: false,
+                defaultTime: 'now',
+                autoClose: true,
+                vibrate: true
+            });
+        }
+        let visitEl = document.getElementById('id_visit_type');
+        if (visitEl) M.FormSelect.init(visitEl);
+        let statusEl = document.getElementById('id_status');
+        if (statusEl) M.FormSelect.init(statusEl);
+    });
+</script>
+
+{% endblock %}

@@ -12,9 +12,37 @@
     maintaining complete confidentiality.
 </p>
 
+<div class="carousel carousel-slider center" data-indicators="true">
+    <div class="carousel-item" href="#one!">
+        <img src="{% static 'images/1.jpeg' %}" alt="Slide 1">
+    </div>
+    <div class="carousel-item" href="#two!">
+        <img src="{% static 'images/2.jpeg' %}" alt="Slide 2">
+    </div>
+    <div class="carousel-item" href="#three!">
+        <img src="{% static 'images/3.jpg' %}" alt="Slide 3">
+    </div>
+</div>
+
 <p style="font-size: x-large;">It minimizes paperwork and manual tasks, allowing healthcare providers to focus on
     patient care.
     Features like automated appointment scheduling, electronic prescriptions, and real-time updates on patient health
     records make your practice more efficient and organized.
 </p>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('.carousel');
+    var instances = M.Carousel.init(elems, {
+      fullWidth: true,
+      indicators: true
+    });
+
+    // Optional: auto slide
+    setInterval(function() {
+      instances.forEach(function(instance) {
+        instance.next();
+      });
+    }, 4000); // change slide every 4 seconds
+  });
+</script>
 {% endblock %}
