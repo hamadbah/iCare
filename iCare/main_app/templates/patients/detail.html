@@ -44,7 +44,7 @@
             <tr>
                 <th>Date</th>
                 <th>Time</th>
-                <th>Doctor Code</th>
+                <th>Doctor Name</th>
                 <th>Visit Type</th>
                 <th>Status</th>
                 {% if user.is_authenticated %}
@@ -96,7 +96,9 @@
         <h4>Add Appointment</h4>
         <form id="appointmentForm" action="{% url 'add_appointment' patient.id %}" method="post">
             {% csrf_token %}
+            
             {{ appointment_form.as_p }}
+            
             <div class="modal-footer" style="margin-top:15px;">
                 <button type="submit" class="btn blue" style="text-transform:none;">Book Appointment</button>
                 <a href="#!" class="modal-close btn grey" style="text-transform:none;">Cancel</a>
@@ -105,32 +107,33 @@
     </div>
 </div>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var modalElems = document.querySelectorAll('.modal');
-        M.Modal.init(modalElems);
-        var dateEl = document.getElementById('id_appointment_date');
-        if (dateEl) {
-            M.Datepicker.init(dateEl, {
-                format: 'yyyy-mm-dd',
-                defaultDate: new Date(),
-                setDefaultDate: true,
-                autoClose: true
-            });
-        }
-        var timeEl = document.getElementById('id_appointment_time');
-        if (timeEl) {
-            M.Timepicker.init(timeEl, {
-                twelveHour: false,
-                defaultTime: 'now',
-                autoClose: true,
-                vibrate: true
-            });
-        }
-        let visitEl = document.getElementById('id_visit_type');
-        if (visitEl) M.FormSelect.init(visitEl);
-        let statusEl = document.getElementById('id_status');
-        if (statusEl) M.FormSelect.init(statusEl);
-    });
+document.addEventListener('DOMContentLoaded', function () {
+    var modalElems = document.querySelectorAll('.modal');
+    M.Modal.init(modalElems);
+
+    var dateEl = document.getElementById('id_appointment_date');
+    if (dateEl) {
+        M.Datepicker.init(dateEl, {
+            format: 'yyyy-mm-dd',
+            defaultDate: new Date(),
+            setDefaultDate: true,
+            autoClose: true
+        });
+    }
+
+    var timeEl = document.getElementById('id_appointment_time');
+    if (timeEl) {
+        M.Timepicker.init(timeEl, {
+            twelveHour: false,
+            defaultTime: 'now',
+            autoClose: true,
+            vibrate: true
+        });
+    }
+
+    var selects = document.querySelectorAll('select');
+    M.FormSelect.init(selects);
+});
 </script>
 
 {% endblock %}

@@ -17,7 +17,7 @@ class Profile(models.Model):
     address = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
-        return self.user.username
+        return f"{self.fullname} ({self.user.username})"
     
 gender_choices = [('male', 'Male'), ('female', 'Female')]
 
@@ -41,14 +41,15 @@ visit_type_choices = [
     ('follow_up', 'Follow Up'),
 ]
 appointment_status_choices = [
-    ('Scheduled', 'Scheduled'), ('Completed', 'Completed'), ('Cancelled', 'Cancelled'),
+    ('Scheduled', 'Scheduled'), 
+    ('Cancelled', 'Cancelled'),
 ]
 
 class Appointment(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
     appointment_date = models.DateField()
     appointment_time = models.TimeField()
-    doctor_code = models.CharField(max_length=50)
+    doctor_code = models.ForeignKey(Profile, limit_choices_to={'role': 'doctor'}, on_delete=models.SET_NULL, null=True, related_name='appointments')
     visit_type = models.CharField(max_length=20, choices=visit_type_choices)
     status = models.CharField(max_length=20, choices=appointment_status_choices)
 

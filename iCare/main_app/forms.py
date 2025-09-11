@@ -1,4 +1,6 @@
 from django.forms import ModelForm
+from django import forms
+from django.contrib.auth.models import User
 from .models import Profile, Appointment, VitalSign, DoctorNote, Prescription, Lab, Diagnosis
 
 class ProfileForm(ModelForm):
@@ -7,6 +9,11 @@ class ProfileForm(ModelForm):
         fields = ['role', 'fullname', 'phone','address']
 
 class AppointmentForm(ModelForm):
+    doctor_code = forms.ModelChoiceField(
+        queryset=Profile.objects.filter(role='doctor'),
+        empty_label="-- Select a Doctor --",
+        label="Doctor Name",
+    )
     class Meta:
         model = Appointment
         fields = ['appointment_date', 'appointment_time','doctor_code','visit_type','status']
