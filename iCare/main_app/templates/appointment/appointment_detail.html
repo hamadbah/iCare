@@ -5,12 +5,12 @@
 <h3 class="center-align" style="font-weight: bold;">Appointment Details</h3>
 <div class="flex-container" style="display: flex; gap: 20px; flex-wrap: wrap;">
     <div class="card-content">
-        <p><strong>Name:</strong> {{ patient.patient_name }} - <strong>National ID:</strong> {{ patient.national_id }}
-            - <strong>DOB:</strong> {{ patient.date_of_birth }} - <strong>Gender:</strong> {{ patient.gender }}
+        <p style="font-weight: bold;"><strong>Name:</strong> {{ patient.patient_name }} - <strong>National ID:</strong> {{ patient.national_id }}
+            - <strong>DOB:</strong> {{ patient.date_of_birth }} - <strong>Gender:</strong> {{ patient.gender|capfirst }}
             - <strong>Phone:</strong> {{ patient.phone }} </p>
         <hr />
-        <p><strong>Date:</strong> {{ appointment.appointment_date }} - <strong>Time:</strong> {{ appointment.appointment_time }} <strong>Doctor Code:</strong> {{ appointment.doctor_code }}
-            - <strong>Visit Type:</strong> {{ appointment.visit_type }} - <strong>Status:</strong> {{ appointment.status }}</p>
+        <p style="font-weight: bold;"><strong>Date:</strong> {{ appointment.appointment_date }} - <strong>Time:</strong> {{ appointment.appointment_time }} <strong>Doctor Code:</strong> {{ appointment.doctor_code }}
+            - <strong>Visit Type:</strong> {{ appointment.visit_type|capfirst }} - <strong>Status:</strong> {{ appointment.status }}</p>
     </div>
     <div>
         {% load static %}

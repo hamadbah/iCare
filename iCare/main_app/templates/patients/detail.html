@@ -2,23 +2,18 @@
 {% block content %}
 <h3 style="font-weight: bolder;">Patient Details</h3>
 <div class="card">
-    <div class="card-content">
-        <div class="flex-container" style="display:flex; justify-content:space-between; align-items:flex-start;">
-            <div>
-                <a href="{% url 'detail' patient.id %}">
-                    <span class="card-title">{{ patient.patient_name }}</span>
-                </a>
-                <p>National ID: {{ patient.national_id }}</p>
-                <p>Date of Birth: {{ patient.date_of_birth }}</p>
-                <p>Gender: {{ patient.gender }}</p>
-                <p>Phone: {{ patient.phone }}</p>
-                <p>Address: {{ patient.address }}</p>
-            </div>
-            <div class="card-image">
-                {% load static %}
-                <img src="{% static patient.image|cut:'main_app/static/' %}" alt="{{ patient.patient_name }}"
-                    style="max-width: 150px; height: 180px; border-radius: 8px;" />
-            </div>
+    <div class="flex-container" style="display: flex; gap: 20px; flex-wrap: wrap;">
+        <div class="card-content">
+            <p style="font-weight: bold;"><strong>Name:</strong> {{ patient.patient_name }} - <strong>National
+                    ID:</strong> {{ patient.national_id }}
+                - <strong>DOB:</strong> {{ patient.date_of_birth }}</p>
+            <p style="font-weight: bold;"><strong>Gender:</strong> {{ patient.gender|capfirst }}
+                - <strong>Phone:</strong> {{ patient.phone }} </p>
+        </div>
+        <div>
+            {% load static %}
+            <img src="{% static patient.image|cut:'main_app/static/' %}" alt="{{ patient.patient_name }}"
+                style="max-width: 150px; height: 80px; border-radius: 8px;" />
         </div>
     </div>
     <div class="card-action">
@@ -96,9 +91,9 @@
         <h4>Add Appointment</h4>
         <form id="appointmentForm" action="{% url 'add_appointment' patient.id %}" method="post">
             {% csrf_token %}
-            
+
             {{ appointment_form.as_p }}
-            
+
             <div class="modal-footer" style="margin-top:15px;">
                 <button type="submit" class="btn blue" style="text-transform:none;">Book Appointment</button>
                 <a href="#!" class="modal-close btn grey" style="text-transform:none;">Cancel</a>
@@ -107,33 +102,33 @@
     </div>
 </div>
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    var modalElems = document.querySelectorAll('.modal');
-    M.Modal.init(modalElems);
+    document.addEventListener('DOMContentLoaded', function () {
+        var modalElems = document.querySelectorAll('.modal');
+        M.Modal.init(modalElems);
 
-    var dateEl = document.getElementById('id_appointment_date');
-    if (dateEl) {
-        M.Datepicker.init(dateEl, {
-            format: 'yyyy-mm-dd',
-            defaultDate: new Date(),
-            setDefaultDate: true,
-            autoClose: true
-        });
-    }
+        var dateEl = document.getElementById('id_appointment_date');
+        if (dateEl) {
+            M.Datepicker.init(dateEl, {
+                format: 'yyyy-mm-dd',
+                defaultDate: new Date(),
+                setDefaultDate: true,
+                autoClose: true
+            });
+        }
 
-    var timeEl = document.getElementById('id_appointment_time');
-    if (timeEl) {
-        M.Timepicker.init(timeEl, {
-            twelveHour: false,
-            defaultTime: 'now',
-            autoClose: true,
-            vibrate: true
-        });
-    }
+        var timeEl = document.getElementById('id_appointment_time');
+        if (timeEl) {
+            M.Timepicker.init(timeEl, {
+                twelveHour: false,
+                defaultTime: 'now',
+                autoClose: true,
+                vibrate: true
+            });
+        }
 
-    var selects = document.querySelectorAll('select');
-    M.FormSelect.init(selects);
-});
+        var selects = document.querySelectorAll('select');
+        M.FormSelect.init(selects);
+    });
 </script>
 
 {% endblock %}
