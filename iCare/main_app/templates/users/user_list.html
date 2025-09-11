@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3 style="font-weight: bolder;">All Users</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Full Name</th>
+            <th>Role</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>Edit</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.username|upper }}</td>
+            <td>{{ user.profile.fullname }}</td>
+            <td>{{ user.profile.role }}</td>
+            <td>{{ user.profile.phone }}</td>
+            <td>{{ user.profile.address }}</td>
+            <td><a href="{% url 'update_user' user.id %}">Edit</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

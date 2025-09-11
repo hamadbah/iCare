@@ -33,4 +33,6 @@ urlpatterns = [
     path('diagnosis/<int:pk>/update/', views.DiagnosisUpdate.as_view(), name='diagnosis-update'),   
     path('patients/<int:patient_id>/summary/', views.patient_summary, name='patient_summary'),
     path("doctor-chat/", views.doctor_chat, name="doctor_chat"),
+    path("users/", views.user_list, name="user_list"),
+    path('users/<int:user_id>/update/', views.update_user, name='update_user'),
 ]

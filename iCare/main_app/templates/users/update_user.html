@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3 style="font-weight: bolder;" class="center-align">Update User: {{ user_obj.username|upper }}</h3>
+
+<div class="row">
+    <form method="post" class="col s12">
+        {% csrf_token %}
+        <div class="card-panel">
+            <h5>Account Info</h5>
+            <div class="row">
+                <div class="input-field col s6">
+                    {{ user_form.username.label_tag }}
+                    {{ user_form.username }}
+                </div>
+
+                <div class="input-field col s6">
+                    {{ user_form.email.label_tag }}
+                    {{ user_form.email }}
+                </div>
+            </div>
+        </div>
+        <div class="card-panel">
+            <h5>Profile Info</h5>
+            <div class="row">
+                <div class="input-field col s6">
+                    {{ profile_form.fullname.label_tag }}
+                    {{ profile_form.fullname }}
+                </div>
+
+                <div class="input-field col s6">
+                    {{ profile_form.phone.label_tag }}
+                    {{ profile_form.phone }}
+                </div>
+
+                <div class="input-field col s12">
+                    {{ profile_form.address.label_tag }}
+                    {{ profile_form.address }}
+
+                </div>
+
+                <div class="input-field col s6">
+                    {{ profile_form.role }}
+                    <label for="id_role">Role</label>
+                </div>
+            </div>
+        </div>
+        <div class="center-align">
+            <button type="submit" class="btn waves-effect waves-light">Update</button>
+            <a href="{% url 'user_list' %}" class="btn grey">Back</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let elems = document.querySelectorAll('select');
+        M.FormSelect.init(elems);
+    });
+</script>
+{% endblock %}

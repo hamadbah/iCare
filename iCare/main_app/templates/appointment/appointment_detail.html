@@ -34,7 +34,7 @@
 </div>
 <div id="notes" class="col s12">
     {% if user.is_authenticated %}
-    {% if user.profile.role == 'doctor' %}
+    {% if user.profile.role == 'doctor' or user.profile.role == 'admin' %}
     <a class="btn green modal-trigger" href="#doctornoteModal">➕ Doctor Notes</a>
     {% endif %}
     {% endif %}
@@ -59,7 +59,7 @@
                 <td>{{ notes.objective|default:"-" }}</td>
                 <td>{{ notes.plan|default:"-" }}</td>
                 {% if user.is_authenticated %}
-                {% if user.profile.role == 'doctor' %}
+                {% if user.profile.role == 'doctor' or user.profile.role == 'admin' %}
                 <td><a href="{% url 'note-update' notes.id %}" class="btn white">✏️</a></td>
                 <td><a href="{% url 'note-delete' notes.id %}" class="btn white">❌</a></td>
                 {% endif %}
@@ -145,7 +145,7 @@
 </div>
 <div id="prescriptions" class="col s12">
     {% if user.is_authenticated %}
-    {% if user.profile.role == 'doctor' %}
+    {% if user.profile.role == 'doctor' or user.profile.role == 'admin' %}
     <a class="btn green modal-trigger" href="#prescriptionModal">➕ Prescriptions</a>
     {% endif %}
     {% endif %}
@@ -157,7 +157,7 @@
                 <th>Frequency</th>
                 <th>Duration</th>
                 {% if user.is_authenticated %}
-                {% if user.profile.role == 'doctor' %}
+                {% if user.profile.role == 'doctor' or user.profile.role == 'admin' %}
                 <th>Edit</th>
                 <th>Delete</th>
                 {% endif %}
@@ -172,7 +172,7 @@
                 <td>{{ prescriptions.frequency|default:"-" }}</td>
                 <td>{{ prescriptions.duration|default:"-" }}</td>
                 {% if user.is_authenticated %}
-                {% if user.profile.role == 'doctor' %}
+                {% if user.profile.role == 'doctor' or user.profile.role == 'admin' %}
                 <td><a href="{% url 'prescription-update' prescriptions.id %}" class="btn white">✏️</a></td>
                 <td><a href="{% url 'prescription-delete' prescriptions.id %}" class="btn white">❌</a></td>
                 {% endif %}
@@ -188,7 +188,7 @@
 </div>
 <div id="diagnosis" class="col s12">
     {% if user.is_authenticated %}
-    {% if user.profile.role == 'doctor' %}
+    {% if user.profile.role == 'doctor' or user.profile.role == 'admin' %}
     <a class="btn green modal-trigger" href="#diagnosisModal">➕ Diagnosis</a>
     {% endif %}
     {% endif %}
@@ -199,7 +199,7 @@
                 <th>Date</th>
                 <th>Status</th>
                 {% if user.is_authenticated %}
-                {% if user.profile.role == 'doctor' %}
+                {% if user.profile.role == 'doctor' or user.profile.role == 'admin' %}
                 <th>Edit</th>
                 <th>Delete</th>
                 {% endif %}

@@ -42,3 +42,14 @@ class DiagnosisForm(ModelForm):
     class Meta:
         model = Diagnosis
         fields = ['diagnosis_name', 'diagnosis_date','diagnosis_status']
+        
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['fullname', 'phone', 'address', 'role']
+
+
+class UserUpdateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'email']

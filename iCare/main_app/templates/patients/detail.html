@@ -18,19 +18,19 @@
     </div>
     <div class="card-action">
         {% if user.is_authenticated %}
-        {% if user.profile.role == 'clerk' %}
-        <a href="{% url 'patient_update' patient.id %}" class="btn blue" style="text-transform:none;">Edit</a>
+        {% if user.profile.role == 'admin' %}
         <a href="{% url 'patient_delete' patient.id %}" class="btn red" style="text-transform:none;">Delete</a>
+        {% endif %}
+        {% if user.profile.role == 'clerk' or user.profile.role == 'admin' %}
+        <a href="{% url 'patient_update' patient.id %}" class="btn blue" style="text-transform:none;">Edit</a>
         <a href="{% url 'index' %}" class="btn grey" style="text-transform:none;">Back</a>
         <a class="btn modal-trigger" href="#appointmentModal" style="text-transform:none;">Add Appointment</a>
         {% endif %}
-        {% if user.profile.role == 'doctor' or user.profile.role == 'nurse' %}
+        {% if user.profile.role == 'doctor' or user.profile.role == 'nurse' or user.profile.role == 'admin' %}
         <a href="{% url 'patient_summary' patient.id %}" class="btn blue" style="text-transform:none;">View Patient
             Summary</a>
         {% endif %}
         {% endif %}
-
-
     </div>
 </div>
 <div style="max-height: 300px; overflow-y: auto;">
@@ -43,7 +43,7 @@
                 <th>Visit Type</th>
                 <th>Status</th>
                 {% if user.is_authenticated %}
-                {% if user.profile.role == 'doctor' or user.profile.role == 'nurse' %}
+                {% if user.profile.role == 'doctor' or user.profile.role == 'nurse' or user.profile.role == 'admin' %}
                 <th>View</th>
                 {% endif %}
                 {% endif %}
@@ -63,7 +63,7 @@
                 <td>{{ appointment.visit_type }}</td>
                 <td>{{ appointment.status }}</td>
                 {% if user.is_authenticated %}
-                {% if user.profile.role == 'doctor' or user.profile.role == 'nurse' %}
+                {% if user.profile.role == 'doctor' or user.profile.role == 'nurse' or user.profile.role == 'admin' %}
                 <td>
                     <a href="{% url 'appointment_detail' appointment.id %}" class="btn white">➡️</a>
                 </td>

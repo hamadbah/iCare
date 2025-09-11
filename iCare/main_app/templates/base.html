@@ -38,6 +38,9 @@
                     {% if user.profile.role == 'doctor' %}
                     <li><a href="{% url 'doctor_chat' %}">Doctor AI Assistant</a></li>
                     {% endif %}
+                    {% if user.profile.role == 'admin' %}
+                    <li><a href="{% url 'user_list' %}">User List</a></li>
+                    {% endif %}
                     <li>
                         <form method="post" action="{% url 'logout' %}">
                             {% csrf_token %}

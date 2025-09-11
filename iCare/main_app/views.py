@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http import HttpResponse
-from .forms import ProfileForm, AppointmentForm, VitalSignForm, DoctorNoteForm, PrescriptionForm, LabForm, DiagnosisForm
+from .forms import ProfileForm, AppointmentForm, VitalSignForm, DoctorNoteForm, PrescriptionForm, LabForm, DiagnosisForm, UserUpdateForm, ProfileUpdateForm
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Profile, Patient, Appointment, VitalSign, DoctorNote, Prescription, Lab, Diagnosis
+from django.contrib.auth.models import User
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.db.models import Q
 import requests, re
@@ -280,3 +281,30 @@ def patient_summary(request, patient_id):
         "diagnosis": diagnosis
     }
     return render(request, "patients/patient_summary.html", context)
+
+@login_required
+def user_list(request):
+    users = User.objects.exclude(is_superuser=True)
+    return render(request, 'users/user_list.html', {'users': users})
+
+@login_required
+def update_user(request, user_id):
+    user_obj = User.objects.get(id=user_id)
+    profile_obj = Profile.objects.get(user=user_obj)
+    if request.method == "POST":
+        user_form = UserUpdateForm(request.POST)
+        profile_form = ProfileUpdateForm(request.POST)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            return redirect('user_list')
+    else:
+        user_form = UserUpdateForm(instance=user_obj)
+        profile_form = ProfileUpdateForm(instance=profile_obj)
+    return render(request, 'users/update_user.html', {
+        'user_form': user_form,
+        'profile_form': profile_form,
+        'user_obj': user_obj
+    })
+    
+    
