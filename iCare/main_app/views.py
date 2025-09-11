@@ -101,23 +101,18 @@ class PatientUpdate(LoginRequiredMixin, UpdateView):
 class PatientDelete(LoginRequiredMixin, DeleteView):
     model = Patient
     success_url = '/patients/' 
+    
 @login_required
 def add_appointment(request, patient_id):
     patient = Patient.objects.get(id=patient_id)
-    if request.method == "POST":
-        form = AppointmentForm(request.POST)
-        if form.is_valid():
-            new_appointment = form.save(commit=False)
-            new_appointment.patient = patient
-            new_appointment.save()
-            return redirect('detail', patient_id=patient_id)
-    else:
-        form = AppointmentForm()
-    
-    return render(request, 'detail.html', {
-        'appointment_form': form,
-        'patient': patient
-    })
+    form = AppointmentForm(request.POST)
+    if form.is_valid():
+        new_appointment = form.save(commit=False)
+        new_appointment.patient = patient
+        new_appointment.save()
+        return redirect('detail', patient_id=patient_id)
+
+    return render(request, 'detail.html', {'appointment_form': form,'patient': patient})
 
 @login_required
 def appointment_detail(request, appointment_id):
