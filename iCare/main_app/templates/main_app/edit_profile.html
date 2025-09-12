@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h2>Edit Profile</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn blue" style="text-transform:none;">Update</button>
-  </form>
-  <script>
-    let selectEl = document.getElementById('id_role');
-    M.FormSelect.init(selectEl);
+<h3 style="font-weight: bolder;">Edit Profile</h3>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit" class="btn blue" style="text-transform:none;">Update</button>
+</form>
+<script>
+  let selectEl = document.getElementById('id_role');
+  M.FormSelect.init(selectEl);
 </script>
 {% endblock %}

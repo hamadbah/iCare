@@ -114,6 +114,9 @@ STATIC_URL = 'static/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
+USE_TZ = True
+TIME_ZONE = 'Asia/Bahrain'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 

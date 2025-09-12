@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+<h3 style="font-weight: bolder;" class="center-align">Doctor Dashboard</h3>
+<h5 style="color: blue; font-weight: bold;">Today's Appointments  : {{ today }}</h5>
+<table class="striped">
+    <thead>
+        <tr>
+            <th>Patient</th>
+            <th>Time</th>
+            <th>Visit Type</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for appt in todays_appointments %}
+        <tr>
+            <td>{{ appt.patient.patient_name }}</td>
+            <td>{{ appt.appointment_time }}</td>
+            <td>{{ appt.visit_type }}</td>
+            <td>{{ appt.status }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">No appointments today</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h5 style="color: rgb(212, 130, 31); font-weight: bold;">Future Appointments</h5>
+<table class="striped">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Patient</th>
+            <th>Time</th>
+            <th>Visit Type</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for appt in future_appointments %}
+        <tr>
+            <td>{{ appt.appointment_date }}</td>
+            <td>{{ appt.patient.patient_name }}</td>
+            <td>{{ appt.appointment_time }}</td>
+            <td>{{ appt.visit_type }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">No future appointments</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h5 style="color: red; font-weight: bold;">Past Appointments</h5>
+<table class="striped">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Patient</th>
+            <th>Time</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for appt in past_appointments %}
+        <tr>
+            <td>{{ appt.appointment_date }}</td>
+            <td>{{ appt.patient.patient_name }}</td>
+            <td>{{ appt.appointment_time }}</td>
+            <td>{{ appt.status }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">No past appointments</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h5 class="center-align">Appointments Summary</h5>
+<div style="width: 300px; margin: 0 auto;">
+    <canvas id="appointmentChart"></canvas>
+</div>
+{{ chart_data|json_script:"chart-data" }}
+
+<div id="chart-container" style="text-align: center; max-width: 400px; margin: auto;">
+    <canvas id="appointmentChart"></canvas>
+    <p id="no-data-message" style="display: none; color: #888;">No statistics available.</p>
+</div>
+
+<script>
+    const chartData = JSON.parse(document.getElementById('chart-data').textContent);
+
+    if (!chartData || chartData.length === 0) {
+        document.getElementById('appointmentChart').style.display = 'none';
+        document.getElementById('no-data-message').style.display = 'block';
+    } else {
+        document.getElementById('no-data-message').style.display = 'none';
+        const labels = chartData.map(item => item.status);
+        const counts = chartData.map(item => item.count);
+        new Chart(document.getElementById('appointmentChart'), {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Appointments by Status',
+                    data: counts,
+                    backgroundColor: ['#42a5f5', '#66bb6a', '#ffa726', '#ef5350']
+                }]
+            }
+        });
+    }
+</script>
+{% endblock %}

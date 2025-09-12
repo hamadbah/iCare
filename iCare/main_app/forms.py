@@ -6,7 +6,7 @@ from .models import Profile, Appointment, VitalSign, DoctorNote, Prescription, L
 class ProfileForm(ModelForm):
     class Meta:
         model = Profile
-        fields = ['role', 'fullname', 'phone','address']
+        fields = ['fullname', 'phone','address']
 
 class AppointmentForm(ModelForm):
     doctor_code = forms.ModelChoiceField(

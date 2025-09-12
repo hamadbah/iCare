@@ -11,7 +11,9 @@ from django.contrib.auth.models import User
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.db.models import Q
 import requests, re
-from django.utils.timezone import now
+from django.utils.timezone import localtime
+from django.db.models import Count
+
 
 OLLAMA_URL = "http://localhost:11434/v1/chat/completions"
 OLLAMA_MODEL = "deepseek-r1:1.5b"
@@ -314,13 +316,55 @@ def update_user(request, user_id):
     
 @login_required
 def todays_appointments(request):
-    today = now().date()
+    today = localtime().date()
     doctor_profile = request.user.profile
     appointments = Appointment.objects.filter(
         doctor_code = doctor_profile,
         appointment_date = today
     ).select_related('patient')
-    return render(request, "appointment/todays_appointments.html",{
+    return render(request, 'appointment/todays_appointments.html',{
+        'appointments': appointments,
+        'today': today
+    })
+    
+@login_required
+def doctor_dashboard(request):
+    doctor = request.user.profile  
+    today = localtime().date()
+
+    todays_appointments = Appointment.objects.filter(
+        doctor_code=doctor,
+        appointment_date=today
+    ).order_by('appointment_time')
+
+    future_appointments = Appointment.objects.filter(
+        doctor_code=doctor,
+        appointment_date__gt=today
+    ).order_by('appointment_date', 'appointment_time')
+
+    past_appointments = Appointment.objects.filter(
+        doctor_code=doctor,
+        appointment_date__lt=today
+    ).order_by('-appointment_date', '-appointment_time')
+
+    chart_data = (
+    Appointment.objects.filter(doctor_code=doctor).values('status').annotate(count=Count('id')))
+    context = {
+        'todays_appointments': todays_appointments,
+        'today': today,
+        'future_appointments': future_appointments,
+        'past_appointments': past_appointments,
+        'chart_data': list(chart_data),
+    }
+    return render(request, 'dashboard/doctor_dashboard.html', context)
+
+@login_required
+def todays_appt_nurses(request):
+    today = localtime().date()
+    appointments = Appointment.objects.filter(
+        appointment_date = today
+    ).select_related('patient')
+    return render(request, 'appointment/nurse_list.html',{
         'appointments': appointments,
         'today': today
     })

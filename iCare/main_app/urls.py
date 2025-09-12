@@ -32,8 +32,10 @@ urlpatterns = [
     path('diagnosis/<int:pk>/delete/', views.DiagnosisDelete.as_view(), name='diagnosis-delete'),
     path('diagnosis/<int:pk>/update/', views.DiagnosisUpdate.as_view(), name='diagnosis-update'),   
     path('patients/<int:patient_id>/summary/', views.patient_summary, name='patient_summary'),
-    path("doctor-chat/", views.doctor_chat, name="doctor_chat"),
-    path("users/", views.user_list, name="user_list"),
+    path('doctor-chat/', views.doctor_chat, name='doctor_chat'),
+    path('users/', views.user_list, name='user_list'),
     path('users/<int:user_id>/update/', views.update_user, name='update_user'),
-    path('appointment/today/', views.todays_appointments, name='todays_appointment')
+    path('appointment/today/', views.todays_appointments, name='todays_appointment'),
+    path('dashboard/', views.doctor_dashboard, name='doctor_dashboard'),
+    path('appointment/nurses/', views.todays_appt_nurses, name='nurses_list'),
 ]
