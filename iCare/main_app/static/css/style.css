@@ -92,11 +92,11 @@ h2 {
 }
 
 .carousel.carousel-slider {
-    height: 300px !important;
+    height: 400px !important;
 }
 
 .carousel.carousel-slider .carousel-item img {
-    height: 300px;
+    height: 100%;
     width: 100%;
-    object-fit: cover; /* makes image fill while keeping proportions */
+    object-fit: cover;
 }

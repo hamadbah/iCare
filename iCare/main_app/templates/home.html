@@ -14,10 +14,10 @@
 
 <div class="carousel carousel-slider center" data-indicators="true">
     <div class="carousel-item" href="#one!">
-        <img src="{% static 'images/1.jpeg' %}" alt="Slide 1">
+        <img src="{% static 'images/1.jpg' %}" alt="Slide 1">
     </div>
     <div class="carousel-item" href="#two!">
-        <img src="{% static 'images/2.jpeg' %}" alt="Slide 2">
+        <img src="{% static 'images/2.jpg' %}" alt="Slide 2">
     </div>
     <div class="carousel-item" href="#three!">
         <img src="{% static 'images/3.jpg' %}" alt="Slide 3">
@@ -37,12 +37,11 @@
       indicators: true
     });
 
-    // Optional: auto slide
     setInterval(function() {
       instances.forEach(function(instance) {
         instance.next();
       });
-    }, 4000); // change slide every 4 seconds
+    }, 3000);
   });
 </script>
 {% endblock %}
