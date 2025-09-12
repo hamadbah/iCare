@@ -18,7 +18,9 @@
                 <ul>
                     <li>
                         <a href="{% url 'home' %}" class="left brand-logo">
-                            &nbsp;&nbsp;&nbsp;iCare,
+                            &nbsp;&nbsp;&nbsp;
+                            <img src="{% static 'images/logo-2.png' %}" alt="iCare Logo"
+                                style="width:100px; height:55px; border-radius:50%; vertical-align: middle;">
                             {% if user.is_authenticated %}
                             {{ user.username|upper }}
                             {% else %}
@@ -61,7 +63,7 @@
         {% endblock %}
     </main>
     <footer class="page-footer indigo darken-4">
-        <div class="right">All Right Reserved, &copy; 2025 iCare EMR &nbsp;</div>
+        <div class="right">All Right Reserved, &copy; 2025 iCare &nbsp;</div>
     </footer>
 </body>
 
