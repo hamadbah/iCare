@@ -292,9 +292,11 @@ def user_list(request):
 def update_user(request, user_id):
     user_obj = User.objects.get(id=user_id)
     profile_obj = Profile.objects.get(user=user_obj)
+
     if request.method == "POST":
-        user_form = UserUpdateForm(request.POST)
-        profile_form = ProfileUpdateForm(request.POST)
+        user_form = UserUpdateForm(request.POST, instance=user_obj)
+        profile_form = ProfileUpdateForm(request.POST, instance=profile_obj)
+
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
@@ -302,11 +304,13 @@ def update_user(request, user_id):
     else:
         user_form = UserUpdateForm(instance=user_obj)
         profile_form = ProfileUpdateForm(instance=profile_obj)
+
     return render(request, 'users/update_user.html', {
         'user_form': user_form,
         'profile_form': profile_form,
         'user_obj': user_obj
     })
+
     
 @login_required
 def todays_appointments(request):
