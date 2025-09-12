@@ -1,11 +1,13 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h3 style="font-weight: bolder;">{{ request.user.username|upper }}'s Profile</h2>
-  <p><strong>Role:</strong> {{ profile.role|capfirst }}</p>
-  <p><strong>Full Name:</strong> {{ profile.fullname }}</p>
-  <p><strong>Phone:</strong> {{ profile.phone }}</p>
-  <p><strong>Address:</strong> {{ profile.address }}</p>
+<h3 style="font-weight: bolder;">{{ request.user.username|upper }}'s Profile</h2>
+  <p style="font-weight: bold;"><strong>Role:</strong> {{ profile.role|capfirst }}</p>
+  <p style="font-weight: bold;"><strong>Full Name:</strong> {{ profile.fullname }}</p>
+  <p style="font-weight: bold;"><strong>Phone:</strong> {{ profile.phone }}</p>
+  <p style="font-weight: bold;"><strong>Address:</strong> {{ profile.address }}</p>
 
-  <a href="{% url 'edit_profile' %}">Edit Profile</a>
-{% endblock %}
+  <a href="{% url 'edit_profile' %}" class="btn red waves-effect waves-light" style="text-transform:none;">
+    Edit Profile
+  </a>
+  {% endblock %}
