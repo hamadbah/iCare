@@ -11,6 +11,7 @@ from django.contrib.auth.models import User
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.db.models import Q
 import requests, re
+from django.utils.timezone import now
 
 OLLAMA_URL = "http://localhost:11434/v1/chat/completions"
 OLLAMA_MODEL = "deepseek-r1:1.5b"
@@ -307,4 +308,15 @@ def update_user(request, user_id):
         'user_obj': user_obj
     })
     
-    
+@login_required
+def todays_appointments(request):
+    today = now().date()
+    doctor_profile = request.user.profile
+    appointments = Appointment.objects.filter(
+        doctor_code = doctor_profile,
+        appointment_date = today
+    ).select_related('patient')
+    return render(request, "appointment/todays_appointments.html",{
+        'appointments': appointments,
+        'today': today
+    })
