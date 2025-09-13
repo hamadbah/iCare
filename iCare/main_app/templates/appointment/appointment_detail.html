@@ -5,11 +5,13 @@
 <h3 class="center-align" style="font-weight: bold;">Appointment Details</h3>
 <div class="flex-container" style="display: flex; gap: 20px; flex-wrap: wrap;">
     <div class="card-content">
-        <p style="font-weight: bold;"><strong>Name:</strong> {{ patient.patient_name }} - <strong>National ID:</strong> {{ patient.national_id }}
+        <p style="font-weight: bold;"><strong>Name:</strong> {{ patient.patient_name }} - <strong>National ID:</strong>
+            {{ patient.national_id }}
             - <strong>DOB:</strong> {{ patient.date_of_birth }} - <strong>Gender:</strong> {{ patient.gender|capfirst }}
             - <strong>Phone:</strong> {{ patient.phone }} </p>
         <hr />
-        <p style="font-weight: bold;"><strong>Date:</strong> {{ appointment.appointment_date }} - <strong>Time:</strong> {{ appointment.appointment_time }} <strong>Doctor Code:</strong> {{ appointment.doctor_code }}
+        <p style="font-weight: bold;"><strong>Date:</strong> {{ appointment.appointment_date }} - <strong>Time:</strong>
+            {{ appointment.appointment_time }} <strong>Doctor Code:</strong> {{ appointment.doctor_code }}
             - <strong>Visit Type:</strong> {{ appointment.visit_type|capfirst }} - <strong>Status:</strong> {{ appointment.status }}</p>
     </div>
     <div>
@@ -24,11 +26,12 @@
 <div class="row">
     <div class="col s12">
         <ul class="tabs">
-            <li class="tab col s2"><a href="#notes">Doctor Notes</a></li>
-            <li class="tab col s2"><a href="#vitals">Vitals</a></li>
-            <li class="tab col s2"><a href="#labs">Labs</a></li>
-            <li class="tab col s2"><a href="#prescriptions">Prescriptions</a></li>
-            <li class="tab col s2"><a href="#diagnosis">Diagnosis</a></li>
+            <li class="tab col"><a href="#notes">Doctor Notes</a></li>
+            <li class="tab col"><a href="#vitals">Vitals</a></li>
+            <li class="tab col"><a href="#labs">Labs</a></li>
+            <li class="tab col"><a href="#prescriptions">Prescriptions</a></li>
+            <li class="tab col"><a href="#diagnosis">Diagnosis</a></li>
+            <li class="tab col"><a href="#nursenote">Nurse Note</a></li>
         </ul>
     </div>
 </div>
@@ -223,6 +226,43 @@
         </tbody>
     </table>
 </div>
+
+<div id="nursenote" class="col s12">
+    {% if user.is_authenticated %}
+    {% if user.profile.role == 'nurse' or user.profile.role == 'admin' %}
+    <a class="btn green modal-trigger" href="#nursenoteModal">➕ Nurse Note</a>
+    {% endif %}
+    {% endif %}
+    <table class="striped highlight responsive-table">
+        <thead>
+            <tr>
+                <th>Time</th>
+                <th>Note</th>
+                {% if user.is_authenticated %}
+                {% if user.profile.role == 'nurse' or user.profile.role == 'admin' %}
+                <th>Edit</th>
+                <th>Delete</th>
+                {% endif %}
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for nursenote in appointment.nursenote_set.all %}
+            <tr>
+                <td>{{ nursenote.note_time|default:"-" }}</td>
+                <td>{{ nursenote.note|default:"-" }}</td>
+                <td><a href="{% url 'nurse-note-update' nursenote.id %}" class="btn white">✏️</a></td>
+                <td><a href="{% url 'nurse-note-delete' nursenote.id %}" class="btn white">❌</a></td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6">No notes yet</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
 <div id="vitalModal" class="modal">
     <div class="modal-content">
         <h4>Add Vital Sign</h4>
@@ -289,6 +329,20 @@
     </div>
 </div>
 
+<div id="nursenoteModal" class="modal">
+    <div class="modal-content">
+        <h4>Add Nurse Note</h4>
+        <form id="nursenoteForm" action="{% url 'add_nurse_note' appointment.id %}" method="post">
+            {% csrf_token %}
+            {{ nursenote_form.as_p }}
+            <div class="modal-footer" style="margin-top:15px;">
+                <button type="submit" class="btn blue" style="text-transform:none;">Save</button>
+                <a href="#!" class="modal-close btn grey" style="text-transform:none;">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var elems = document.querySelectorAll('.modal');
@@ -315,6 +369,15 @@
         let diagSelectEl = document.getElementById('id_diagnosis_status');
         if (diagSelectEl) {
             M.FormSelect.init(diagSelectEl);
+        }
+        var notetimeEl = document.getElementById('id_note_time');
+        if (notetimeEl) {
+            M.Timepicker.init(notetimeEl, {
+                twelveHour: false,
+                defaultTime: 'now',
+                autoClose: true,
+                vibrate: true
+            });
         }
     });
 </script>

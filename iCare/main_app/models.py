@@ -125,3 +125,14 @@ class Diagnosis(models.Model):
 
     def get_absolute_url(self):
         return reverse("diagnosis_detail", kwargs={"diagnosis_id": self.id})
+    
+class NurseNote(models.Model):
+    appointment = models.ForeignKey("Appointment", on_delete=models.CASCADE)
+    note_time = models.TimeField()
+    note = models.TextField()
+
+    def __str__(self):
+        return f"{self.note} for {self.patient}"
+
+    def get_absolute_url(self):
+        return reverse("nurse_note_detail", kwargs={"nursenote_id": self.id})

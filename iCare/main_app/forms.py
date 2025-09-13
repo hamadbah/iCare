@@ -1,7 +1,7 @@
 from django.forms import ModelForm
 from django import forms
 from django.contrib.auth.models import User
-from .models import Profile, Appointment, VitalSign, DoctorNote, Prescription, Lab, Diagnosis
+from .models import Profile, Appointment, VitalSign, DoctorNote, Prescription, Lab, Diagnosis, NurseNote
 
 class ProfileForm(ModelForm):
     class Meta:
@@ -27,6 +27,17 @@ class DoctorNoteForm(ModelForm):
     class Meta:
         model = DoctorNote
         fields = ['subjective', 'objective','plan']
+        
+class NurseNoteForm(ModelForm):
+    class Meta:
+        model = NurseNote
+        fields = ['note_time', 'note']
+        widgets = {
+            'note_time': forms.TimeInput(
+                format='%H:%M',
+            ),
+        }
+
         
 class PrescriptionForm(ModelForm):
     class Meta:

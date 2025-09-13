@@ -11,6 +11,6 @@
 <form method="post">
     {% csrf_token %}
     <button type="submit" class="btn red" style="text-transform:none;">Delete</button>
-    <a href="{% url 'appointment_detail' object.appointment.id %}" class="btn grey" style="text-transform:none;">Cancel</a>
+    <a href="{% url 'appointment_detail' object.appointment.id %}#labs" class="btn grey" style="text-transform:none;">Cancel</a>
 </form>
 {% endblock %}
