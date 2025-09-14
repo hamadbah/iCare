@@ -22,15 +22,12 @@ urlpatterns = [
     path('doctor/<int:appointment_id>/add-notes/', views.add_notes, name='add_notes'),
     path('doctor/<int:pk>/delete/', views.DoctorNoteDelete.as_view(), name='note-delete'),
     path('doctor/<int:pk>/update/', views.DoctorNoteUpdate.as_view(), name='note-update'),
-    
     path('nurse/<int:appointment_id>/add-nurse-notes/', views.add_nurse_note, name='add_nurse_note'),
     path('nurse/<int:pk>/delete/', views.NurseNoteDelete.as_view(), name='nurse-note-delete'),
     path('nurse/<int:pk>/update/', views.NurseNoteUpdate.as_view(), name='nurse-note-update'),
-    
     path('order/<int:appointment_id>/add-order/', views.add_order, name='add_order'),
     path('order/<int:pk>/delete/', views.DoctorOrderDelete.as_view(), name='order-delete'),
     path('order/<int:pk>/update/', views.DoctorOrderUpdate.as_view(), name='order-update'),
-    
     path('prescription/<int:appointment_id>/add-prescriptions/', views.add_prescriptions, name='add_prescriptions'),
     path('prescription/<int:pk>/delete/', views.PrescriptionDelete.as_view(), name='prescription-delete'),
     path('prescription/<int:pk>/update/', views.PrescriptionUpdate.as_view(), name='prescription-update'),

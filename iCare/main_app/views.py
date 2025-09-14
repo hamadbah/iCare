@@ -266,9 +266,6 @@ class LabUpdate(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse('appointment_detail', kwargs={'appointment_id': self.object.appointment.id}) + "#labs"
-    
-    
-## order Views 
 
 @login_required    
 def add_order(request, appointment_id):
