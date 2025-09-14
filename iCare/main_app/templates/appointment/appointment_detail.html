@@ -39,7 +39,7 @@
 <div id="notes" class="col s12">
     {% if user.is_authenticated %}
     {% if user.profile.role == 'doctor' or user.profile.role == 'admin' %}
-    <a class="btn green modal-trigger" href="#doctornoteModal">➕ Doctor Notes</a>
+    <a id="notesBtn" class="btn green modal-trigger" href="#doctornoteModal">➕ Doctor Notes</a>
     {% endif %}
     {% endif %}
     <table class="striped highlight responsive-table">
@@ -78,7 +78,7 @@
     </table>
 </div>
 <div id="vitals" class="col s12">
-    <a class="btn green modal-trigger" href="#vitalModal">➕ Vitals</a>
+    <a id="vitalsBtn" class="btn green modal-trigger" href="#vitalModal">➕ Vitals</a>
     <table class="striped highlight responsive-table">
         <thead>
             <tr>
@@ -117,7 +117,7 @@
     </table>
 </div>
 <div id="labs" class="col s12">
-    <a class="btn green modal-trigger" href="#labModal">➕ Lab</a>
+    <a id="labBtn" class="btn green modal-trigger" href="#labModal">➕ Lab</a>
     <table class="striped highlight responsive-table">
         <thead>
             <tr>
@@ -150,7 +150,7 @@
 <div id="prescriptions" class="col s12">
     {% if user.is_authenticated %}
     {% if user.profile.role == 'doctor' or user.profile.role == 'admin' %}
-    <a class="btn green modal-trigger" href="#prescriptionModal">➕ Prescriptions</a>
+    <a id="prescriptionBtn" class="btn green modal-trigger" href="#prescriptionModal">➕ Prescriptions</a>
     {% endif %}
     {% endif %}
     <table class="striped highlight responsive-table">
@@ -194,7 +194,7 @@
 <div id="orders" class="col s12">
     {% if user.is_authenticated %}
     {% if user.profile.role == 'doctor' or user.profile.role == 'admin' %}
-    <a class="btn green modal-trigger" href="#ordersModal">➕ Orders</a>
+    <a id="ordersBtn" class="btn green modal-trigger" href="#ordersModal">➕ Orders</a>
     {% endif %}
     {% endif %}
     <table class="striped highlight responsive-table">
@@ -216,7 +216,7 @@
         <tbody>
             {% for orders in appointment.doctororder_set.all %}
             <tr>
-                <td>{{ orders.order_type|default:"-" }}</td>
+                <td>{{ orders.order_date|default:"-" }}</td>
                 <td>{{ orders.order_type|default:"-" }}</td>
                 <td>{{ orders.instructions|default:"-" }}</td>
                 <td>{{ orders.priority|default:"-" }}</td>
@@ -241,7 +241,7 @@
 <div id="diagnosis" class="col s12">
     {% if user.is_authenticated %}
     {% if user.profile.role == 'doctor' or user.profile.role == 'admin' %}
-    <a class="btn green modal-trigger" href="#diagnosisModal">➕ Diagnosis</a>
+    <a id="diagnosisBtn" class="btn green modal-trigger" href="#diagnosisModal">➕ Diagnosis</a>
     {% endif %}
     {% endif %}
     <table class="striped highlight responsive-table">
@@ -279,7 +279,7 @@
 <div id="nursenote" class="col s12">
     {% if user.is_authenticated %}
     {% if user.profile.role == 'nurse' or user.profile.role == 'admin' %}
-    <a class="btn green modal-trigger" href="#nursenoteModal">➕ Nurse Note</a>
+    <a id="nsnoteBtn" class="btn green modal-trigger" href="#nursenoteModal">➕ Nurse Note</a>
     {% endif %}
     {% endif %}
     <table class="striped highlight responsive-table">
@@ -457,6 +457,43 @@
                 vibrate: true
             });
         }
+        const appointmentDate = new Date("{{ appointment.appointment_date|date:'Y-m-d' }}");
+        const today = new Date();
+        appointmentDate.setHours(0, 0, 0, 0);
+        today.setHours(0, 0, 0, 0);
+
+        const buttons = {
+        vitalbtn: document.getElementById('vitalsBtn'),
+        notebtn: document.getElementById('notesBtn'),
+        labsbtn: document.getElementById('labBtn'),
+        prescriptionsbtn: document.getElementById('prescriptionBtn'),
+        orderbtn: document.getElementById('ordersBtn'),
+        diagnosbtn: document.getElementById('diagnosisBtn'),
+        nursenotebtn: document.getElementById('nsnoteBtn')
+    };
+
+    // Helper to disable a button and attach toast
+    const disableButton = (btn, message) => {
+        if (!btn) return;
+        btn.classList.remove('modal-trigger');
+        btn.removeAttribute('href');
+        btn.style.pointerEvents = "auto";
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            M.toast({ html: message, classes: 'rounded red' });
+        });
+    };
+
+    // Only disable buttons if appointment is NOT today
+    if (appointmentDate.getTime() !== today.getTime()) {
+        disableButton(buttons.vitalbtn, 'Vitals can only be added on todays appointment.');
+        disableButton(buttons.notebtn, 'Doctor Notes can only be added on todays appointment.');
+        disableButton(buttons.labsbtn, 'Labs can only be added on todays appointment.');
+        disableButton(buttons.prescriptionsbtn, 'Prescriptions can only be added on todays appointment.');
+        disableButton(buttons.orderbtn, 'Orders can only be added on todays appointment.');
+        disableButton(buttons.diagnosbtn, 'Diagnosis can only be added on todays appointment.');
+        disableButton(buttons.nursenotebtn, 'Nurse Notes can only be added on todays appointment.');
+    }
     });
 </script>
 {% endblock %}
