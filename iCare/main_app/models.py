@@ -69,7 +69,7 @@ class VitalSign(models.Model):
     oxygen_saturation = models.DecimalField(max_digits=5, decimal_places=2,null=True, blank=True)
 
     def __str__(self):
-        return f"Vitals for {self.patient} (Appt {self.appointment.id})"
+        return f"Vitals for {self.appointment.patient.patient_name} (Appt {self.appointment.id})"
     
 class DoctorNote(models.Model):
     appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE)
@@ -78,7 +78,7 @@ class DoctorNote(models.Model):
     plan = models.TextField()
 
     def __str__(self):
-        return f"{self.subjective} for {self.patient}"
+        return f"{self.subjective} for {self.appointment.patient.patient_name}"
     
 class Prescription(models.Model):
     appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE)
@@ -89,7 +89,7 @@ class Prescription(models.Model):
     notes = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return f"{self.drug_name} for {self.patient} (Appt {self.appointment.id})"
+        return f"{self.drug_name} for {self.appointment.patient.patient_name} (Appt {self.appointment.id})"
     
 lab_status_choices = [
     ('pending', 'Pending'),
@@ -101,10 +101,10 @@ class Lab(models.Model):
     test_name = models.CharField(max_length=100)
     test_date = models.DateField()
     result = models.TextField(blank=True, null=True)
-    status = models.CharField(max_length=20, choices=lab_status_choices, default='pending')
+    lab_status = models.CharField(max_length=20, choices=lab_status_choices, default='pending')
 
     def __str__(self):
-        return f"{self.test_name} for {self.patient} ({self.status})"
+        return f"{self.test_name} for {self.appointment.patient.patient_name} ({self.status})"
 
     def get_absolute_url(self):
         return reverse('lab_detail', kwargs={'lab_id': self.id})
@@ -115,24 +115,51 @@ status_choices = [
     ]
 
 class Diagnosis(models.Model):
-    appointment = models.ForeignKey("Appointment", on_delete=models.CASCADE)
+    appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE)
     diagnosis_name = models.CharField(max_length=200)
     diagnosis_date = models.DateField()
     diagnosis_status = models.CharField(max_length=20, choices=status_choices)
 
     def __str__(self):
-        return f"{self.diagnosis_name} for {self.patient} ({self.status})"
+        return f"{self.diagnosis_name} for {self.appointment.patient.patient_name} ({self.diagnosis_status})"
 
     def get_absolute_url(self):
         return reverse("diagnosis_detail", kwargs={"diagnosis_id": self.id})
     
 class NurseNote(models.Model):
-    appointment = models.ForeignKey("Appointment", on_delete=models.CASCADE)
+    appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE)
     note_time = models.TimeField()
     note = models.TextField()
 
     def __str__(self):
-        return f"{self.note} for {self.patient}"
+        return f"{self.note} for {self.appointment.patient.patient_name}"
 
     def get_absolute_url(self):
         return reverse("nurse_note_detail", kwargs={"nursenote_id": self.id})
+
+
+order_priority_choices = [
+    ('routine', 'Routine'), 
+    ('urgent', 'Urgent'), 
+    ('stat', 'Stat')
+    ]
+
+order_status_choices = [
+    ('pending', 'Pending'), 
+    ('in_progress', 'In Progress'), 
+    ('completed', 'Completed')
+    ]
+
+class DoctorOrder(models.Model):
+    appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE)
+    order_date = models.DateField()
+    order_type = models.CharField(max_length=100)
+    instructions = models.TextField()
+    priority = models.CharField(max_length=20,choices=order_priority_choices)
+    order_status = models.CharField(max_length=20,choices=order_status_choices)
+
+    def __str__(self):
+        return f"Order: {self.order_type} for {self.appointment.patient.patient_name} ({self.order_status})"
+
+    def get_absolute_url(self):
+        return reverse("doctor_order_detail", kwargs={"order_id": self.id})

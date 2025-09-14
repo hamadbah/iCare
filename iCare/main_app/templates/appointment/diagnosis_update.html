@@ -7,4 +7,8 @@
     <button type="submit" class="btn blue" style="text-transform:none;">Update</button>
     <a href="{% url 'appointment_detail' object.appointment.id %}#diagnosis" class="btn grey" style="text-transform:none;">Cancel</a>
 </form>
+<script>
+    let selectEl = document.getElementById('id_diagnosis_status');
+    M.FormSelect.init(selectEl);
+</script>
 {% endblock %}

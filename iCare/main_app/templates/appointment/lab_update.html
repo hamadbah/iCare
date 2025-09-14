@@ -8,7 +8,7 @@
     <a href="{% url 'appointment_detail' object.appointment.id %}#labs" class="btn grey" style="text-transform:none;">Cancel</a>
 </form>
 <script>
-    let selectEl = document.getElementById('id_status');
+    let selectEl = document.getElementById('id_lab_status');
     M.FormSelect.init(selectEl);
 </script>
 {% endblock %}

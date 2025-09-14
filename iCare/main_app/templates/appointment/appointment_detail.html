@@ -30,6 +30,7 @@
             <li class="tab col"><a href="#vitals">Vitals</a></li>
             <li class="tab col"><a href="#labs">Labs</a></li>
             <li class="tab col"><a href="#prescriptions">Prescriptions</a></li>
+            <li class="tab col"><a href="#orders">Orders</a></li>
             <li class="tab col"><a href="#diagnosis">Diagnosis</a></li>
             <li class="tab col"><a href="#nursenote">Nurse Note</a></li>
         </ul>
@@ -134,7 +135,7 @@
                 <td>{{ labs.test_name|default:"-" }}</td>
                 <td>{{ labs.test_date|default:"-" }}</td>
                 <td>{{ labs.result|default:"-" }}</td>
-                <td>{{ labs.status|default:"-" }}</td>
+                <td>{{ labs.lab_status|default:"-" }}</td>
                 <td><a href="{% url 'lab-update' labs.id %}" class="btn white">✏️</a></td>
                 <td><a href="{% url 'lab-delete' labs.id %}" class="btn white">❌</a></td>
             </tr>
@@ -189,6 +190,54 @@
         </tbody>
     </table>
 </div>
+
+<div id="orders" class="col s12">
+    {% if user.is_authenticated %}
+    {% if user.profile.role == 'doctor' or user.profile.role == 'admin' %}
+    <a class="btn green modal-trigger" href="#ordersModal">➕ Orders</a>
+    {% endif %}
+    {% endif %}
+    <table class="striped highlight responsive-table">
+        <thead>
+            <tr>
+                <th>Order Date</th>
+                <th>Order Type</th>
+                <th>Instructions</th>
+                <th>Priority</th>
+                <th>Status</th>
+                {% if user.is_authenticated %}
+                {% if user.profile.role == 'doctor' or user.profile.role == 'admin' %}
+                <th>Edit</th>
+                <th>Delete</th>
+                {% endif %}
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for orders in appointment.doctororder_set.all %}
+            <tr>
+                <td>{{ orders.order_type|default:"-" }}</td>
+                <td>{{ orders.order_type|default:"-" }}</td>
+                <td>{{ orders.instructions|default:"-" }}</td>
+                <td>{{ orders.priority|default:"-" }}</td>
+                <td>{{ orders.order_status|default:"-" }}</td>
+                {% if user.is_authenticated %}
+                {% if user.profile.role == 'doctor' or user.profile.role == 'admin' %}
+                <td><a href="{% url 'order-update' orders.id %}" class="btn white">✏️</a></td>
+                <td><a href="{% url 'order-delete' orders.id %}" class="btn white">❌</a></td>
+                {% endif %}
+                {% endif %}
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6">No orders yet</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
 <div id="diagnosis" class="col s12">
     {% if user.is_authenticated %}
     {% if user.profile.role == 'doctor' or user.profile.role == 'admin' %}
@@ -302,6 +351,21 @@
         </form>
     </div>
 </div>
+
+<div id="ordersModal" class="modal">
+    <div class="modal-content">
+        <h4>Add Order</h4>
+        <form id="doctororderForm" action="{% url 'add_order' appointment.id %}" method="post">
+            {% csrf_token %}
+            {{ doctororder_form.as_p }}
+            <div class="modal-footer" style="margin-top:15px;">
+                <button type="submit" class="btn blue" style="text-transform:none;">Save</button>
+                <a href="#!" class="modal-close btn grey" style="text-transform:none;">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div id="labModal" class="modal">
     <div class="modal-content">
         <h4>Add Lab</h4>
@@ -342,7 +406,6 @@
         </form>
     </div>
 </div>
-
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var elems = document.querySelectorAll('.modal');
@@ -356,9 +419,24 @@
             M.Datepicker.init(dateEl, { format: 'yyyy-mm-dd', autoClose: true });
         }
 
-        let selectEl = document.getElementById('id_status');
+        let selectEl = document.getElementById('id_lab_status');
         if (selectEl) {
             M.FormSelect.init(selectEl);
+        }
+
+        let priorityselectEl = document.getElementById('id_priority');
+        if (priorityselectEl) {
+            M.FormSelect.init(priorityselectEl);
+        }
+
+        var orderdateEl = document.getElementById('id_order_date');
+        if (orderdateEl) {
+            M.Datepicker.init(orderdateEl, { format: 'yyyy-mm-dd', autoClose: true });
+        }
+
+        let orderstatusEl = document.getElementById('id_order_status');
+        if (orderstatusEl) {
+            M.FormSelect.init(orderstatusEl);
         }
 
         var diagDateEl = document.getElementById('id_diagnosis_date');

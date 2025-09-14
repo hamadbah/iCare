@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+<p style="color: red; font-weight: bold; font-size: x-large;">Are you sure you want to delete these Notes?</p>
+<ul>
+    <li>Order Date: 
+        {% if object.order_date %}
+        {{ object.order_date }}
+        {% else %}
+        -
+        {% endif %}
+    </li>
+    <li>Order Type: 
+        {% if object.order_type %}
+        {{ object.order_type }}
+        {% else %}
+        -
+        {% endif %}
+    </li>
+    <li>Instructions: 
+        {% if object.instructions %}
+        {{ object.instructions }}
+        {% else %}
+        -
+        {% endif %}
+    </li>
+    <li>Priority: 
+        {% if object.priority %}
+        {{ object.priority }}
+        {% else %}
+        -
+        {% endif %}
+    </li>
+    <li>Status: 
+        {% if object.order_status %}
+        {{ object.order_status }}
+        {% else %}
+        -
+        {% endif %}
+    </li>
+</ul>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn red" style="text-transform:none;">Delete</button>
+    <a href="{% url 'appointment_detail' object.appointment.id %}#notes" class="btn grey" style="text-transform:none;">Cancel</a>
+</form>
+{% endblock %}

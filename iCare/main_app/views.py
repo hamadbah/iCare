@@ -1,12 +1,12 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http import HttpResponse
-from .forms import ProfileForm, AppointmentForm, VitalSignForm, DoctorNoteForm, PrescriptionForm, LabForm, DiagnosisForm, UserUpdateForm, ProfileUpdateForm, NurseNoteForm
+from .forms import ProfileForm, AppointmentForm, VitalSignForm, DoctorNoteForm, PrescriptionForm, LabForm, DiagnosisForm, UserUpdateForm, ProfileUpdateForm, NurseNoteForm, DoctorOrderForm
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import Profile, Patient, Appointment, VitalSign, DoctorNote, Prescription, Lab, Diagnosis, NurseNote
+from .models import Profile, Patient, Appointment, VitalSign, DoctorNote, Prescription, Lab, Diagnosis, NurseNote, DoctorOrder
 from django.contrib.auth.models import User
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.db.models import Q
@@ -126,6 +126,7 @@ def appointment_detail(request, appointment_id):
     lab_form = LabForm()
     diagnosis_form = DiagnosisForm()
     nursenote_form = NurseNoteForm()
+    doctororder_form = DoctorOrderForm()
     appointment = Appointment.objects.get(id=appointment_id)
     patient = appointment.patient
     return render(request, 'appointment/appointment_detail.html', {
@@ -136,7 +137,8 @@ def appointment_detail(request, appointment_id):
         'prescription_form': prescription_form,
         'lab_form': lab_form,
         'diagnosis_form': diagnosis_form,
-        'nursenote_form': nursenote_form
+        'nursenote_form': nursenote_form,
+        'doctororder_form':doctororder_form
     })
     
 class AppointmentDelete(LoginRequiredMixin, DeleteView):
@@ -264,6 +266,33 @@ class LabUpdate(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse('appointment_detail', kwargs={'appointment_id': self.object.appointment.id}) + "#labs"
+    
+    
+## order Views 
+
+@login_required    
+def add_order(request, appointment_id):
+    appointment = Appointment.objects.get(id=appointment_id)
+    form = DoctorOrderForm(request.POST)
+    if form.is_valid():
+        orders = form.save(commit=False)
+        orders.appointment = appointment
+        orders.save()
+    return redirect(f"{reverse('appointment_detail', args=[appointment.id])}#orders")
+
+class DoctorOrderDelete(LoginRequiredMixin, DeleteView):
+    model = DoctorOrder
+
+    def get_success_url(self):
+        return reverse('appointment_detail', kwargs={'appointment_id': self.object.appointment.id}) + "#orders"
+
+class DoctorOrderUpdate(LoginRequiredMixin, UpdateView):
+    model = DoctorOrder
+    form_class = DoctorOrderForm
+    template_name = 'appointment/doctororder_update.html'
+
+    def get_success_url(self):
+        return reverse('appointment_detail', kwargs={'appointment_id': self.object.appointment.id}) + "#orders"
 
 @login_required    
 def add_diagnosis(request, appointment_id):
