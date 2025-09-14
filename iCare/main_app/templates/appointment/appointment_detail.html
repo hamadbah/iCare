@@ -472,7 +472,6 @@
         nursenotebtn: document.getElementById('nsnoteBtn')
     };
 
-    // Helper to disable a button and attach toast
     const disableButton = (btn, message) => {
         if (!btn) return;
         btn.classList.remove('modal-trigger');
@@ -484,7 +483,6 @@
         });
     };
 
-    // Only disable buttons if appointment is NOT today
     if (appointmentDate.getTime() !== today.getTime()) {
         disableButton(buttons.vitalbtn, 'Vitals can only be added on todays appointment.');
         disableButton(buttons.notebtn, 'Doctor Notes can only be added on todays appointment.');
