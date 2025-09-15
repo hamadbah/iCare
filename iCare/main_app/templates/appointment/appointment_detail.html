@@ -12,8 +12,7 @@
         <hr />
         <p style="font-weight: bold;"><strong>Date:</strong> {{ appointment.appointment_date }} - <strong>Time:</strong>
             {{ appointment.appointment_time }} <strong>Doctor Code:</strong> {{ appointment.doctor_code }}
-            - <strong>Visit Type:</strong> {{ appointment.visit_type|capfirst }} - <strong>Status:</strong> {{
-            appointment.status }}</p>
+            - <strong>Visit Type:</strong> {{ appointment.visit_type|capfirst }} - <strong>Status:</strong> {{ appointment.status }}</p>
     </div>
     <div>
         <img src="{% static patient.image|cut:'main_app/static/' %}" alt="{{ patient.patient_name }}"

@@ -41,7 +41,7 @@
     </div>
 </div>
 
-<div class="card"  style="max-height: 300px; overflow-y: auto; margin-top:20px;">
+<div class="card" style="max-height: 300px; overflow-y: auto; margin-top:20px;">
     <h5 style="font-weight:bold; margin-left:10px; color: green;">Appointments</h5>
     <table class="striped">
         <thead>
@@ -51,11 +51,13 @@
                 <th>Doctor Name</th>
                 <th>Visit Type</th>
                 <th>Status</th>
-                {% if user.is_authenticated and user.profile.role in 'doctor nurse admin' %}
+                {% if user.is_authenticated %}
+                {% if user.profile.role == 'admin' or user.profile.role == 'doctor' or user.profile.role == 'nurse' %}
                 <th>View</th>
                 {% endif %}
-                {% if user.is_authenticated and user.profile.role == 'clerk' %}
+                {% if user.profile.role == 'admin' or user.profile.role == 'clerk' %}
                 <th>Delete</th>
+                {% endif %}
                 {% endif %}
             </tr>
         </thead>
@@ -67,15 +69,17 @@
                 <td>{{ appointment.doctor_code }}</td>
                 <td>{{ appointment.visit_type }}</td>
                 <td>{{ appointment.status }}</td>
-                {% if user.is_authenticated and user.profile.role in 'doctor nurse admin' %}
+                {% if user.is_authenticated %}
+                {% if user.profile.role == 'admin' or user.profile.role == 'doctor' or user.profile.role == 'nurse' %}
                 <td>
                     <a href="{% url 'appointment_detail' appointment.id %}" class="btn white">➡️</a>
                 </td>
                 {% endif %}
-                {% if user.is_authenticated and user.profile.role == 'clerk' %}
+                {% if user.profile.role == 'admin' or user.profile.role == 'clerk' %}
                 <td>
                     <a href="{% url 'appointment-delete' appointment.id %}" class="btn white">❌</a>
                 </td>
+                {% endif %}
                 {% endif %}
             </tr>
             {% empty %}
@@ -96,8 +100,12 @@
                         <th>Type</th>
                         <th>Status</th>
                         <th>Note</th>
+                        {% if user.is_authenticated %}
+                        {% if user.profile.role == 'admin' or user.profile.role == 'doctor' or user.profile.role == 'nurse' %}
                         <th>Edit</th>
                         <th>Delete</th>
+                        {% endif %}
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -106,8 +114,12 @@
                         <td>{{ alert.infection_type|default:"-" }}</td>
                         <td>{{ alert.alert_status|default:"-" }}</td>
                         <td>{{ alert.alert_note|default:"-" }}</td>
+                        {% if user.is_authenticated %}
+                        {% if user.profile.role == 'admin' or user.profile.role == 'doctor' or user.profile.role == 'nurse' %}
                         <td><a href="{% url 'alert_update' alert.id %}" class="btn white">✏️</a></td>
                         <td><a href="{% url 'alert_delete' alert.id %}" class="btn white">❌</a></td>
+                        {% endif %}
+                        {% endif %}
                     </tr>
                     {% empty %}
                     <tr>
@@ -128,8 +140,12 @@
                         <th>Allergy Name</th>
                         <th>Severity</th>
                         <th>Status</th>
+                        {% if user.is_authenticated %}
+                        {% if user.profile.role == 'admin' or user.profile.role == 'doctor' or user.profile.role == 'nurse' %}
                         <th>Edit</th>
                         <th>Delete</th>
+                        {% endif %}
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -138,8 +154,12 @@
                         <td>{{ allergy.allergy_name|default:"-" }}</td>
                         <td>{{ allergy.severity|default:"-" }}</td>
                         <td>{{ allergy.allergy_status|default:"-" }}</td>
+                        {% if user.is_authenticated %}
+                        {% if user.profile.role == 'admin' or user.profile.role == 'doctor' or user.profile.role == 'nurse' %}
                         <td><a href="{% url 'allergy_update' allergy.id %}" class="btn white">✏️</a></td>
                         <td><a href="{% url 'allergy_delete' allergy.id %}" class="btn white">❌</a></td>
+                        {% endif %}
+                        {% endif %}
                     </tr>
                     {% empty %}
                     <tr>
