@@ -12,19 +12,21 @@
         <hr />
         <p style="font-weight: bold;"><strong>Date:</strong> {{ appointment.appointment_date }} - <strong>Time:</strong>
             {{ appointment.appointment_time }} <strong>Doctor Code:</strong> {{ appointment.doctor_code }}
-            - <strong>Visit Type:</strong> {{ appointment.visit_type|capfirst }} - <strong>Status:</strong> {{ appointment.status }}</p>
+            - <strong>Visit Type:</strong> {{ appointment.visit_type|capfirst }} - <strong>Status:</strong> {{
+            appointment.status }}</p>
     </div>
     <div>
         <img src="{% static patient.image|cut:'main_app/static/' %}" alt="{{ patient.patient_name }}"
             style="max-width: 150px; height: 80px; border-radius: 8px;" />
     </div>
-    <div>
-        <a href="{% url 'detail' patient.id %}" class="btn grey" style="margin-top: 20px;">⬅ Back to Patient</a>
-    </div>
+
 </div>
 <div class="first" style="display: block; background: lightblue; padding: 10px; margin: 10px 0;">
-    <a id="allergyBtn" class="btn {% if patient.allergy_set.exists %}red{% else %}grey{% endif %}" style="text-transform:none;">Allergies</a>
-    <a id="alertBtn" class="btn {% if patient.alert_set.exists %}red{% else %}grey{% endif %}" style="text-transform:none;">Alerts</a>
+    <a id="allergyBtn" href="#allergyModal" style="text-transform:none;"
+        class="btn modal-trigger {% if patient.allergy_set.count %}red{% else %}grey darken-2{% endif %}">Allergies</a>
+    <a id="allergyBtn" href="#alertModal" style="text-transform:none;"
+        class="btn modal-trigger {% if patient.alert_set.count %}red{% else %}grey darken-2{% endif %}">Alerts</a>
+    <a href="{% url 'detail' patient.id %}" class="btn grey darken-4" style="text-transform:none;">⬅ Back to Patient</a>
 </div>
 <div class="row" style="margin-top: 10px;">
     <div class="col s12">
@@ -42,7 +44,8 @@
 <div id="notes" class="col s12">
     {% if user.is_authenticated %}
     {% if user.profile.role == 'doctor' or user.profile.role == 'admin' %}
-    <a id="notesBtn" class="btn green modal-trigger" href="#doctornoteModal" style="text-transform:none;">➕ Doctor Notes</a>
+    <a id="notesBtn" class="btn green modal-trigger" href="#doctornoteModal" style="text-transform:none;">➕ Doctor
+        Notes</a>
     {% endif %}
     {% endif %}
     <table class="striped highlight responsive-table">
@@ -153,7 +156,8 @@
 <div id="prescriptions" class="col s12">
     {% if user.is_authenticated %}
     {% if user.profile.role == 'doctor' or user.profile.role == 'admin' %}
-    <a id="prescriptionBtn" class="btn green modal-trigger" href="#prescriptionModal" style="text-transform:none;">➕ Prescriptions</a>
+    <a id="prescriptionBtn" class="btn green modal-trigger" href="#prescriptionModal" style="text-transform:none;">➕
+        Prescriptions</a>
     {% endif %}
     {% endif %}
     <table class="striped highlight responsive-table">
@@ -244,7 +248,8 @@
 <div id="diagnosis" class="col s12">
     {% if user.is_authenticated %}
     {% if user.profile.role == 'doctor' or user.profile.role == 'admin' %}
-    <a id="diagnosisBtn" class="btn green modal-trigger" href="#diagnosisModal" style="text-transform:none;">➕ Diagnosis</a>
+    <a id="diagnosisBtn" class="btn green modal-trigger" href="#diagnosisModal" style="text-transform:none;">➕
+        Diagnosis</a>
     {% endif %}
     {% endif %}
     <table class="striped highlight responsive-table">
@@ -282,7 +287,8 @@
 <div id="nursenote" class="col s12">
     {% if user.is_authenticated %}
     {% if user.profile.role == 'nurse' or user.profile.role == 'admin' %}
-    <a id="nsnoteBtn" class="btn green modal-trigger" href="#nursenoteModal" style="text-transform:none;">➕ Nurse Note</a>
+    <a id="nsnoteBtn" class="btn green modal-trigger" href="#nursenoteModal" style="text-transform:none;">➕ Nurse
+        Note</a>
     {% endif %}
     {% endif %}
     <table class="striped highlight responsive-table">
@@ -409,6 +415,69 @@
         </form>
     </div>
 </div>
+
+<div id="allergyModal" class="modal">
+    <div class="modal-content">
+        <h4>Allergies Details</h4>
+        {% if patient.allergy_set.all %}
+        <table class="striped highlight responsive-table">
+            <thead>
+                <tr>
+                    <th>Allergy Name</th>
+                    <th>Severity</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for allergy in patient.allergy_set.all %}
+                <tr>
+                    <td>{{ allergy.allergy_name|default:"-"|capfirst }}</td>
+                    <td>{{ allergy.severity|default:"-"|capfirst }}</td>
+                    <td>{{ allergy.allergy_status|default:"-"|capfirst }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No allergies recorded for this patient.</p>
+        {% endif %}
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-close btn grey">Close</a>
+    </div>
+</div>
+
+<div id="alertModal" class="modal">
+    <div class="modal-content">
+        <h4>Alerts Details</h4>
+        {% if patient.alert_set.all %}
+        <table class="striped highlight responsive-table">
+            <thead>
+                <tr>
+                    <th>Alert Name</th>
+                    <th>Status</th>
+                    <th>Note</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for alert in patient.alert_set.all %}
+                <tr>
+                    <td>{{ alert.infection_type|default:"-"|capfirst }}</td>
+                    <td>{{ alert.alert_status|default:"-"|capfirst }}</td>
+                    <td>{{ alert.alert_note|default:"-" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No alerts recorded for this patient.</p>
+        {% endif %}
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-close btn grey">Close</a>
+    </div>
+</div>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var elems = document.querySelectorAll('.modal');
@@ -466,35 +535,35 @@
         today.setHours(0, 0, 0, 0);
 
         const buttons = {
-        vitalbtn: document.getElementById('vitalsBtn'),
-        notebtn: document.getElementById('notesBtn'),
-        labsbtn: document.getElementById('labBtn'),
-        prescriptionsbtn: document.getElementById('prescriptionBtn'),
-        orderbtn: document.getElementById('ordersBtn'),
-        diagnosbtn: document.getElementById('diagnosisBtn'),
-        nursenotebtn: document.getElementById('nsnoteBtn')
-    };
+            vitalbtn: document.getElementById('vitalsBtn'),
+            notebtn: document.getElementById('notesBtn'),
+            labsbtn: document.getElementById('labBtn'),
+            prescriptionsbtn: document.getElementById('prescriptionBtn'),
+            orderbtn: document.getElementById('ordersBtn'),
+            diagnosbtn: document.getElementById('diagnosisBtn'),
+            nursenotebtn: document.getElementById('nsnoteBtn')
+        };
 
-    const disableButton = (btn, message) => {
-        if (!btn) return;
-        btn.classList.remove('modal-trigger');
-        btn.removeAttribute('href');
-        btn.style.pointerEvents = "auto";
-        btn.addEventListener('click', function(e) {
-            e.preventDefault();
-            M.toast({ html: message, classes: 'rounded red' });
-        });
-    };
+        const disableButton = (btn, message) => {
+            if (!btn) return;
+            btn.classList.remove('modal-trigger');
+            btn.removeAttribute('href');
+            btn.style.pointerEvents = "auto";
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+                M.toast({ html: message, classes: 'rounded red' });
+            });
+        };
 
-    if (appointmentDate.getTime() !== today.getTime()) {
-        disableButton(buttons.vitalbtn, 'Vitals can only be added on todays appointment.');
-        disableButton(buttons.notebtn, 'Doctor Notes can only be added on todays appointment.');
-        disableButton(buttons.labsbtn, 'Labs can only be added on todays appointment.');
-        disableButton(buttons.prescriptionsbtn, 'Prescriptions can only be added on todays appointment.');
-        disableButton(buttons.orderbtn, 'Orders can only be added on todays appointment.');
-        disableButton(buttons.diagnosbtn, 'Diagnosis can only be added on todays appointment.');
-        disableButton(buttons.nursenotebtn, 'Nurse Notes can only be added on todays appointment.');
-    }
+        if (appointmentDate.getTime() !== today.getTime()) {
+            disableButton(buttons.vitalbtn, 'Vitals can only be added on todays appointment.');
+            disableButton(buttons.notebtn, 'Doctor Notes can only be added on todays appointment.');
+            disableButton(buttons.labsbtn, 'Labs can only be added on todays appointment.');
+            disableButton(buttons.prescriptionsbtn, 'Prescriptions can only be added on todays appointment.');
+            disableButton(buttons.orderbtn, 'Orders can only be added on todays appointment.');
+            disableButton(buttons.diagnosbtn, 'Diagnosis can only be added on todays appointment.');
+            disableButton(buttons.nursenotebtn, 'Nurse Notes can only be added on todays appointment.');
+        }
     });
 </script>
 {% endblock %}
