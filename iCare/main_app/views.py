@@ -1,12 +1,12 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http import HttpResponse
-from .forms import ProfileForm, AppointmentForm, VitalSignForm, DoctorNoteForm, PrescriptionForm, LabForm, DiagnosisForm, UserUpdateForm, ProfileUpdateForm, NurseNoteForm, DoctorOrderForm
+from .forms import ProfileForm, AppointmentForm, VitalSignForm, DoctorNoteForm, PrescriptionForm, LabForm, DiagnosisForm, UserUpdateForm, ProfileUpdateForm, NurseNoteForm, DoctorOrderForm, AlertForm
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import Profile, Patient, Appointment, VitalSign, DoctorNote, Prescription, Lab, Diagnosis, NurseNote, DoctorOrder
+from .models import Profile, Patient, Appointment, VitalSign, DoctorNote, Prescription, Lab, Diagnosis, NurseNote, DoctorOrder, Alert
 from django.contrib.auth.models import User
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.db.models import Q
@@ -92,7 +92,8 @@ def patients_index(request):
 def patient_detail(request, patient_id):
     patient = Patient.objects.get(id=patient_id)
     appointment_form = AppointmentForm()
-    return render(request,'patients/detail.html', {'patient': patient, 'appointment_form':appointment_form})
+    alert_form = AlertForm()
+    return render(request,'patients/detail.html', {'patient': patient, 'appointment_form':appointment_form, 'alert_form':alert_form})
 
 class PatientCreate(LoginRequiredMixin, CreateView):
     model = Patient
@@ -143,6 +144,32 @@ def appointment_detail(request, appointment_id):
     
 class AppointmentDelete(LoginRequiredMixin, DeleteView):
     model = Appointment
+
+    def get_success_url(self):
+        return reverse('detail', kwargs={'patient_id': self.object.patient.id})
+    
+@login_required
+def add_alert(request, patient_id):
+    patient = Patient.objects.get(id=patient_id)
+    form = AlertForm(request.POST)
+    if form.is_valid():
+        new_alert = form.save(commit=False)
+        new_alert.patient = patient
+        new_alert.save()
+        return redirect('detail', patient_id=patient_id)
+
+    return render(request, 'detail.html', {'alert_form': form,'patient': patient})
+
+class AlertDelete(LoginRequiredMixin, DeleteView):
+    model = Alert
+
+    def get_success_url(self):
+        return reverse('detail', kwargs={'patient_id': self.object.patient.id})
+    
+class AlertUpdate(LoginRequiredMixin, UpdateView):
+    model = Alert
+    form_class = AlertForm
+    template_name = 'patients/alert_update.html'
 
     def get_success_url(self):
         return reverse('detail', kwargs={'patient_id': self.object.patient.id})

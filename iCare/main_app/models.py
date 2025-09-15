@@ -36,13 +36,62 @@ class Patient(models.Model):
     def get_absolute_url(self):
         return reverse('detail', kwargs={'patient_id': self.id})
     
-visit_type_choices = [
-    ('first', 'First Visit'),
-    ('follow_up', 'Follow Up'),
-]
 appointment_status_choices = [
     ('Scheduled', 'Scheduled'), 
     ('Cancelled', 'Cancelled'),
+]
+
+infection_type_choices = [
+    ('hepatitis_b', 'Hepatitis B'),
+    ('hepatitis_c', 'Hepatitis C'),
+    ('hiv', 'HIV'),
+    ('tuberculosis', 'Tuberculosis'),
+    ('covid19', 'COVID-19'),
+]
+
+alert_status_choices = [
+    ('active', 'Active'),
+    ('resolved', 'Resolved'),
+]
+
+class Alert(models.Model):
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    infection_type = models.CharField(max_length=50, choices=infection_type_choices)
+    alert_status = models.CharField(max_length=20, choices=alert_status_choices)
+    alert_note = models.TextField()
+
+    def __str__(self):
+        return f"{self.infection_type} alert for {self.patient.patient_name}"
+
+    def get_absolute_url(self):
+        return reverse('alert_detail', kwargs={'alert_id': self.id})
+    
+allergy_severity_choices = [
+    ('mild', 'Mild'),
+    ('moderate', 'Moderate'),
+    ('severe', 'Severe'),
+]
+
+allergy_status_choices = [
+    ('active', 'Active'),
+    ('resolved', 'Resolved'),
+]
+
+class Allergy(models.Model):
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    allerg_name = models.CharField(max_length=100)
+    severity = models.CharField(max_length=20, choices=allergy_severity_choices)
+    allergy_status = models.CharField(max_length=20, choices=allergy_status_choices)
+
+    def __str__(self):
+        return f"{self.allerg_name} ({self.severity}) - {self.patient.patient_name}"
+
+    def get_absolute_url(self):
+        return reverse('allergy_detail', kwargs={'allergy_id': self.id})
+
+visit_type_choices = [
+    ('first', 'First Visit'),
+    ('follow_up', 'Follow Up'),
 ]
 
 class Appointment(models.Model):

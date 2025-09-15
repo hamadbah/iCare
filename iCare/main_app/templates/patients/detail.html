@@ -1,17 +1,22 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
+
 <h3 style="font-weight: bolder;">Patient Details</h3>
 <div class="card">
     <div class="flex-container" style="display: flex; gap: 20px; flex-wrap: wrap;">
         <div class="card-content">
-            <p style="font-weight: bold;"><strong>Name:</strong> {{ patient.patient_name }} - <strong>National
-                    ID:</strong> {{ patient.national_id }}
-                - <strong>DOB:</strong> {{ patient.date_of_birth }}</p>
-            <p style="font-weight: bold;"><strong>Gender:</strong> {{ patient.gender|capfirst }}
-                - <strong>Phone:</strong> {{ patient.phone }} </p>
+            <p style="font-weight: bold;">
+                <strong>Name:</strong> {{ patient.patient_name }} -
+                <strong>National ID:</strong> {{ patient.national_id }} -
+                <strong>DOB:</strong> {{ patient.date_of_birth }}
+            </p>
+            <p style="font-weight: bold;">
+                <strong>Gender:</strong> {{ patient.gender|capfirst }} -
+                <strong>Phone:</strong> {{ patient.phone }}
+            </p>
         </div>
         <div>
-            {% load static %}
             <img src="{% static patient.image|cut:'main_app/static/' %}" alt="{{ patient.patient_name }}"
                 style="max-width: 150px; height: 80px; border-radius: 8px;" />
         </div>
@@ -21,19 +26,23 @@
         {% if user.profile.role == 'admin' %}
         <a href="{% url 'patient_delete' patient.id %}" class="btn red" style="text-transform:none;">Delete</a>
         {% endif %}
-        {% if user.profile.role == 'clerk' or user.profile.role == 'admin' %}
+        {% if user.profile.role == 'admin' or user.profile.role == 'clerk' %}
         <a href="{% url 'patient_update' patient.id %}" class="btn blue" style="text-transform:none;">Edit</a>
         <a href="{% url 'index' %}" class="btn grey" style="text-transform:none;">Back</a>
         <a class="btn modal-trigger" href="#appointmentModal" style="text-transform:none;">Add Appointment</a>
         {% endif %}
-        {% if user.profile.role == 'doctor' or user.profile.role == 'nurse' or user.profile.role == 'admin' %}
+        {% if user.profile.role == 'admin' or user.profile.role == 'doctor' or user.profile.role == 'nurse' %}
         <a href="{% url 'patient_summary' patient.id %}" class="btn blue" style="text-transform:none;">View Patient
             Summary</a>
+        <a class="btn orange modal-trigger" href="#alertModal" style="text-transform:none;">Add Alert</a>
+        <a class="btn orange modal-trigger" href="#allergyModal" style="text-transform:none;">Add Allergy</a>
         {% endif %}
         {% endif %}
     </div>
 </div>
-<div style="max-height: 300px; overflow-y: auto;">
+
+<div class="card"  style="max-height: 300px; overflow-y: auto; margin-top:20px;">
+    <h5 style="font-weight:bold; margin-left:10px; color: green;">Appointments</h5>
     <table class="striped">
         <thead>
             <tr>
@@ -42,15 +51,11 @@
                 <th>Doctor Name</th>
                 <th>Visit Type</th>
                 <th>Status</th>
-                {% if user.is_authenticated %}
-                {% if user.profile.role == 'doctor' or user.profile.role == 'nurse' or user.profile.role == 'admin' %}
+                {% if user.is_authenticated and user.profile.role in 'doctor nurse admin' %}
                 <th>View</th>
                 {% endif %}
-                {% endif %}
-                {% if user.is_authenticated %}
-                {% if user.profile.role == 'clerk' %}
+                {% if user.is_authenticated and user.profile.role == 'clerk' %}
                 <th>Delete</th>
-                {% endif %}
                 {% endif %}
             </tr>
         </thead>
@@ -62,20 +67,15 @@
                 <td>{{ appointment.doctor_code }}</td>
                 <td>{{ appointment.visit_type }}</td>
                 <td>{{ appointment.status }}</td>
-                {% if user.is_authenticated %}
-                {% if user.profile.role == 'doctor' or user.profile.role == 'nurse' or user.profile.role == 'admin' %}
+                {% if user.is_authenticated and user.profile.role in 'doctor nurse admin' %}
                 <td>
                     <a href="{% url 'appointment_detail' appointment.id %}" class="btn white">➡️</a>
                 </td>
                 {% endif %}
-                {% endif %}
-                {% if user.is_authenticated %}
-                {% if user.profile.role == 'clerk' %}
+                {% if user.is_authenticated and user.profile.role == 'clerk' %}
                 <td>
-                    <a href="{% url 'appointment-delete' appointment.id %}" class="btn white"
-                        style="text-transform:none;">❌</a>
+                    <a href="{% url 'appointment-delete' appointment.id %}" class="btn white">❌</a>
                 </td>
-                {% endif %}
                 {% endif %}
             </tr>
             {% empty %}
@@ -86,14 +86,45 @@
         </tbody>
     </table>
 </div>
+
+<div class="card" style="margin-top:20px;">
+    <h5 style="font-weight:bold; margin-left:10px; color: red;">Alerts</h5>
+    <div style="padding:10px;">
+        <table class="striped highlight responsive-table">
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Note</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for alert in patient.alert_set.all %}
+                <tr>
+                    <td>{{ alert.infection_type|default:"-" }}</td>
+                    <td>{{ alert.alert_status|default:"-" }}</td>
+                    <td>{{ alert.alert_note|default:"-" }}</td>
+                    <td><a href="{% url 'alert_update' alert.id %}" class="btn white">✏️</a></td>
+                    <td><a href="{% url 'alert_delete' alert.id %}" class="btn white">❌</a></td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7">No alerts for this patient.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<!-- Appointment Modal -->
 <div id="appointmentModal" class="modal">
     <div class="modal-content">
         <h4>Add Appointment</h4>
         <form id="appointmentForm" action="{% url 'add_appointment' patient.id %}" method="post">
             {% csrf_token %}
-
             {{ appointment_form.as_p }}
-
             <div class="modal-footer" style="margin-top:15px;">
                 <button type="submit" class="btn blue" style="text-transform:none;">Book Appointment</button>
                 <a href="#!" class="modal-close btn grey" style="text-transform:none;">Cancel</a>
@@ -101,6 +132,22 @@
         </form>
     </div>
 </div>
+<!-- Alert Modal -->
+<div id="alertModal" class="modal">
+    <div class="modal-content">
+        <h4>Add Alert</h4>
+        <form id="alertForm" action="{% url 'add_alert' patient.id %}" method="post">
+            {% csrf_token %}
+            {{ alert_form.as_p }}
+            <div class="modal-footer" style="margin-top:15px;">
+                <button type="submit" class="btn blue" style="text-transform:none;">Save</button>
+                <a href="#!" class="modal-close btn grey" style="text-transform:none;">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- JS for modal, datepicker, timepicker -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var modalElems = document.querySelectorAll('.modal');

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3 style="font-weight: bolder;">Delete Alert</h3>
+<p>Are you sure you want to delete this Alert?</p>
+<ul>
+    <li>Alert Nmae: {{ object.infection_type|default:"-" }}</li>
+    <li>Status: {{ object.alert_status|default:"-" }}</li>
+    <li>Note: {{ object.alert_note|default:"-" }}</li>
+</ul>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn red" style="text-transform:none;">Delete</button>
+    <a href="{% url 'detail' object.patient.id %}" class="btn grey" style="text-transform:none;">Cancel</a>
+</form>
+{% endblock %}

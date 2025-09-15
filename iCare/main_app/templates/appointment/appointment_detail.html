@@ -15,7 +15,6 @@
             - <strong>Visit Type:</strong> {{ appointment.visit_type|capfirst }} - <strong>Status:</strong> {{ appointment.status }}</p>
     </div>
     <div>
-        {% load static %}
         <img src="{% static patient.image|cut:'main_app/static/' %}" alt="{{ patient.patient_name }}"
             style="max-width: 150px; height: 80px; border-radius: 8px;" />
     </div>
@@ -23,7 +22,11 @@
         <a href="{% url 'detail' patient.id %}" class="btn grey" style="margin-top: 20px;">⬅ Back to Patient</a>
     </div>
 </div>
-<div class="row">
+<div class="first" style="display: block; background: lightblue; padding: 10px; margin: 10px 0;">
+    <a id="allergyBtn" class="btn grey" style="text-transform:none;">Allergies</a>
+    <a id="alertBtn" class="btn grey" style="text-transform:none;">Alerts</a>
+</div>
+<div class="row" style="margin-top: 10px;">
     <div class="col s12">
         <ul class="tabs">
             <li class="tab col"><a href="#notes">Doctor Notes</a></li>
@@ -39,7 +42,7 @@
 <div id="notes" class="col s12">
     {% if user.is_authenticated %}
     {% if user.profile.role == 'doctor' or user.profile.role == 'admin' %}
-    <a id="notesBtn" class="btn green modal-trigger" href="#doctornoteModal">➕ Doctor Notes</a>
+    <a id="notesBtn" class="btn green modal-trigger" href="#doctornoteModal" style="text-transform:none;">➕ Doctor Notes</a>
     {% endif %}
     {% endif %}
     <table class="striped highlight responsive-table">
@@ -78,7 +81,7 @@
     </table>
 </div>
 <div id="vitals" class="col s12">
-    <a id="vitalsBtn" class="btn green modal-trigger" href="#vitalModal">➕ Vitals</a>
+    <a id="vitalsBtn" class="btn green modal-trigger" href="#vitalModal" style="text-transform:none;">➕ Vitals</a>
     <table class="striped highlight responsive-table">
         <thead>
             <tr>
@@ -117,7 +120,7 @@
     </table>
 </div>
 <div id="labs" class="col s12">
-    <a id="labBtn" class="btn green modal-trigger" href="#labModal">➕ Lab</a>
+    <a id="labBtn" class="btn green modal-trigger" href="#labModal" style="text-transform:none;">➕ Labs</a>
     <table class="striped highlight responsive-table">
         <thead>
             <tr>
@@ -150,7 +153,7 @@
 <div id="prescriptions" class="col s12">
     {% if user.is_authenticated %}
     {% if user.profile.role == 'doctor' or user.profile.role == 'admin' %}
-    <a id="prescriptionBtn" class="btn green modal-trigger" href="#prescriptionModal">➕ Prescriptions</a>
+    <a id="prescriptionBtn" class="btn green modal-trigger" href="#prescriptionModal" style="text-transform:none;">➕ Prescriptions</a>
     {% endif %}
     {% endif %}
     <table class="striped highlight responsive-table">
@@ -194,7 +197,7 @@
 <div id="orders" class="col s12">
     {% if user.is_authenticated %}
     {% if user.profile.role == 'doctor' or user.profile.role == 'admin' %}
-    <a id="ordersBtn" class="btn green modal-trigger" href="#ordersModal">➕ Orders</a>
+    <a id="ordersBtn" class="btn green modal-trigger" href="#ordersModal" style="text-transform:none;">➕ Orders</a>
     {% endif %}
     {% endif %}
     <table class="striped highlight responsive-table">
@@ -241,7 +244,7 @@
 <div id="diagnosis" class="col s12">
     {% if user.is_authenticated %}
     {% if user.profile.role == 'doctor' or user.profile.role == 'admin' %}
-    <a id="diagnosisBtn" class="btn green modal-trigger" href="#diagnosisModal">➕ Diagnosis</a>
+    <a id="diagnosisBtn" class="btn green modal-trigger" href="#diagnosisModal" style="text-transform:none;">➕ Diagnosis</a>
     {% endif %}
     {% endif %}
     <table class="striped highlight responsive-table">
@@ -279,7 +282,7 @@
 <div id="nursenote" class="col s12">
     {% if user.is_authenticated %}
     {% if user.profile.role == 'nurse' or user.profile.role == 'admin' %}
-    <a id="nsnoteBtn" class="btn green modal-trigger" href="#nursenoteModal">➕ Nurse Note</a>
+    <a id="nsnoteBtn" class="btn green modal-trigger" href="#nursenoteModal" style="text-transform:none;">➕ Nurse Note</a>
     {% endif %}
     {% endif %}
     <table class="striped highlight responsive-table">
