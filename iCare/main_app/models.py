@@ -79,7 +79,7 @@ allergy_status_choices = [
 
 class Allergy(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
-    allerg_name = models.CharField(max_length=100)
+    allergy_name = models.CharField(max_length=100)
     severity = models.CharField(max_length=20, choices=allergy_severity_choices)
     allergy_status = models.CharField(max_length=20, choices=allergy_status_choices)
 

@@ -60,7 +60,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for appointment in patient.appointment_set.all %}
+            {% for appointment in appointments %}
             <tr>
                 <td>{{ appointment.appointment_date }}</td>
                 <td>{{ appointment.appointment_time }}</td>
@@ -86,39 +86,71 @@
         </tbody>
     </table>
 </div>
+<div style="display: flex; gap: 20px; margin-top:20px; flex-wrap: wrap;">
+    <div class="card" style="flex: 1; max-height: 300px; overflow-y: auto;">
+        <h5 style="font-weight:bold; margin-left:10px; color: red;">Alerts</h5>
+        <div style="padding:10px;">
+            <table class="striped highlight responsive-table">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Note</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for alert in patient.alert_set.all %}
+                    <tr>
+                        <td>{{ alert.infection_type|default:"-" }}</td>
+                        <td>{{ alert.alert_status|default:"-" }}</td>
+                        <td>{{ alert.alert_note|default:"-" }}</td>
+                        <td><a href="{% url 'alert_update' alert.id %}" class="btn white">✏️</a></td>
+                        <td><a href="{% url 'alert_delete' alert.id %}" class="btn white">❌</a></td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7">No alerts for this patient.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-<div class="card" style="margin-top:20px;">
-    <h5 style="font-weight:bold; margin-left:10px; color: red;">Alerts</h5>
-    <div style="padding:10px;">
-        <table class="striped highlight responsive-table">
-            <thead>
-                <tr>
-                    <th>Type</th>
-                    <th>Status</th>
-                    <th>Note</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for alert in patient.alert_set.all %}
-                <tr>
-                    <td>{{ alert.infection_type|default:"-" }}</td>
-                    <td>{{ alert.alert_status|default:"-" }}</td>
-                    <td>{{ alert.alert_note|default:"-" }}</td>
-                    <td><a href="{% url 'alert_update' alert.id %}" class="btn white">✏️</a></td>
-                    <td><a href="{% url 'alert_delete' alert.id %}" class="btn white">❌</a></td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="7">No alerts for this patient.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <div class="card" style="flex: 1; max-height: 300px; overflow-y: auto;">
+        <h5 style="font-weight:bold; margin-left:10px; color: red;">Allergies</h5>
+        <div style="padding:10px;">
+            <table class="striped highlight responsive-table">
+                <thead>
+                    <tr>
+                        <th>Allergy Name</th>
+                        <th>Severity</th>
+                        <th>Status</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for allergy in patient.allergy_set.all %}
+                    <tr>
+                        <td>{{ allergy.allergy_name|default:"-" }}</td>
+                        <td>{{ allergy.severity|default:"-" }}</td>
+                        <td>{{ allergy.allergy_status|default:"-" }}</td>
+                        <td><a href="{% url 'allergy_update' allergy.id %}" class="btn white">✏️</a></td>
+                        <td><a href="{% url 'allergy_delete' allergy.id %}" class="btn white">❌</a></td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7">No allergies for this patient.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
-<!-- Appointment Modal -->
 <div id="appointmentModal" class="modal">
     <div class="modal-content">
         <h4>Add Appointment</h4>
@@ -132,7 +164,7 @@
         </form>
     </div>
 </div>
-<!-- Alert Modal -->
+
 <div id="alertModal" class="modal">
     <div class="modal-content">
         <h4>Add Alert</h4>
@@ -147,7 +179,20 @@
     </div>
 </div>
 
-<!-- JS for modal, datepicker, timepicker -->
+<div id="allergyModal" class="modal">
+    <div class="modal-content">
+        <h4>Add Allergy</h4>
+        <form id="allergyForm" action="{% url 'add_allergy' patient.id %}" method="post">
+            {% csrf_token %}
+            {{ allergy_form.as_p }}
+            <div class="modal-footer" style="margin-top:15px;">
+                <button type="submit" class="btn blue" style="text-transform:none;">Save</button>
+                <a href="#!" class="modal-close btn grey" style="text-transform:none;">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var modalElems = document.querySelectorAll('.modal');

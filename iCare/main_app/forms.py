@@ -1,7 +1,7 @@
 from django.forms import ModelForm
 from django import forms
 from django.contrib.auth.models import User
-from .models import Profile, Appointment, VitalSign, DoctorNote, Prescription, Lab, Diagnosis, NurseNote, DoctorOrder, Alert
+from .models import Profile, Appointment, VitalSign, DoctorNote, Prescription, Lab, Diagnosis, NurseNote, DoctorOrder, Alert, Allergy
 
 class ProfileForm(ModelForm):
     class Meta:
@@ -73,3 +73,8 @@ class AlertForm(forms.ModelForm):
     class Meta:
         model = Alert
         fields = ['infection_type', 'alert_status','alert_note']
+        
+class AllergyForm(forms.ModelForm):
+    class Meta:
+        model = Allergy
+        fields = ['allergy_name', 'severity','allergy_status']

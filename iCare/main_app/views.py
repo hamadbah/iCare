@@ -1,12 +1,12 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http import HttpResponse
-from .forms import ProfileForm, AppointmentForm, VitalSignForm, DoctorNoteForm, PrescriptionForm, LabForm, DiagnosisForm, UserUpdateForm, ProfileUpdateForm, NurseNoteForm, DoctorOrderForm, AlertForm
+from .forms import ProfileForm, AppointmentForm, VitalSignForm, DoctorNoteForm, PrescriptionForm, LabForm, DiagnosisForm, UserUpdateForm, ProfileUpdateForm, NurseNoteForm, DoctorOrderForm, AlertForm, AllergyForm
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import Profile, Patient, Appointment, VitalSign, DoctorNote, Prescription, Lab, Diagnosis, NurseNote, DoctorOrder, Alert
+from .models import Profile, Patient, Appointment, VitalSign, DoctorNote, Prescription, Lab, Diagnosis, NurseNote, DoctorOrder, Alert, Allergy
 from django.contrib.auth.models import User
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.db.models import Q
@@ -91,9 +91,17 @@ def patients_index(request):
 @login_required
 def patient_detail(request, patient_id):
     patient = Patient.objects.get(id=patient_id)
+    appointments = patient.appointment_set.order_by('-appointment_date', '-appointment_time')
     appointment_form = AppointmentForm()
     alert_form = AlertForm()
-    return render(request,'patients/detail.html', {'patient': patient, 'appointment_form':appointment_form, 'alert_form':alert_form})
+    allergy_form = AllergyForm()
+    return render(request,'patients/detail.html', {
+        'patient': patient, 
+        'appointments':appointments,
+        'appointment_form':appointment_form, 
+        'alert_form':alert_form,
+        'allergy_form': allergy_form
+        })
 
 class PatientCreate(LoginRequiredMixin, CreateView):
     model = Patient
@@ -174,6 +182,34 @@ class AlertUpdate(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         return reverse('detail', kwargs={'patient_id': self.object.patient.id})
     
+
+@login_required
+def add_allergy(request, patient_id):
+    patient = Patient.objects.get(id=patient_id)
+    form = AllergyForm(request.POST)
+    if form.is_valid():
+        new_allergy = form.save(commit=False)
+        new_allergy.patient = patient
+        new_allergy.save()
+        return redirect('detail', patient_id=patient_id)
+
+    return render(request, 'detail.html', {'allergy_form': form,'patient': patient})
+
+class AllergyDelete(LoginRequiredMixin, DeleteView):
+    model = Allergy
+
+    def get_success_url(self):
+        return reverse('detail', kwargs={'patient_id': self.object.patient.id})
+    
+class AllergyUpdate(LoginRequiredMixin, UpdateView):
+    model = Allergy
+    form_class = AllergyForm
+    template_name = 'patients/allergy_update.html'
+
+    def get_success_url(self):
+        return reverse('detail', kwargs={'patient_id': self.object.patient.id})
+
+
 @login_required    
 def add_vitals(request, appointment_id):
     appointment = Appointment.objects.get(id=appointment_id)
