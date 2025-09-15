@@ -23,8 +23,8 @@
     </div>
 </div>
 <div class="first" style="display: block; background: lightblue; padding: 10px; margin: 10px 0;">
-    <a id="allergyBtn" class="btn grey" style="text-transform:none;">Allergies</a>
-    <a id="alertBtn" class="btn grey" style="text-transform:none;">Alerts</a>
+    <a id="allergyBtn" class="btn {% if patient.allergy_set.exists %}red{% else %}grey{% endif %}" style="text-transform:none;">Allergies</a>
+    <a id="alertBtn" class="btn {% if patient.alert_set.exists %}red{% else %}grey{% endif %}" style="text-transform:none;">Alerts</a>
 </div>
 <div class="row" style="margin-top: 10px;">
     <div class="col s12">
