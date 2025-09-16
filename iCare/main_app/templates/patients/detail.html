@@ -56,6 +56,7 @@
                 <th>View</th>
                 {% endif %}
                 {% if user.profile.role == 'admin' or user.profile.role == 'clerk' %}
+                <th>Edit</th>
                 <th>Delete</th>
                 {% endif %}
                 {% endif %}
@@ -76,6 +77,9 @@
                 </td>
                 {% endif %}
                 {% if user.profile.role == 'admin' or user.profile.role == 'clerk' %}
+                <td>
+                    <a href="{% url 'appointment-update' appointment.id %}" class="btn white">✏️</a>
+                </td>
                 <td>
                     <a href="{% url 'appointment-delete' appointment.id %}" class="btn white">❌</a>
                 </td>

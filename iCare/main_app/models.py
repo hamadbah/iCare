@@ -38,12 +38,11 @@ class Patient(models.Model):
     
 appointment_status_choices = [
     ('Scheduled', 'Scheduled'), 
+    ('Arrive', 'Arrive'),
     ('Cancelled', 'Cancelled'),
 ]
 
 infection_type_choices = [
-    ('hepatitis_b', 'Hepatitis B'),
-    ('hepatitis_c', 'Hepatitis C'),
     ('hiv', 'HIV'),
     ('tuberculosis', 'Tuberculosis'),
     ('covid19', 'COVID-19'),

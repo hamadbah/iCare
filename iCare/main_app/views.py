@@ -156,6 +156,14 @@ class AppointmentDelete(LoginRequiredMixin, DeleteView):
     def get_success_url(self):
         return reverse('detail', kwargs={'patient_id': self.object.patient.id})
     
+class AppointmentUpdate(LoginRequiredMixin, UpdateView):
+    model = Appointment
+    form_class = AppointmentForm
+    template_name = 'patients/appointment_update.html'
+
+    def get_success_url(self):
+        return reverse('detail', kwargs={'patient_id': self.object.patient.id})
+    
 @login_required
 def add_alert(request, patient_id):
     patient = Patient.objects.get(id=patient_id)

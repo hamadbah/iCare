@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3 style="font-weight: bolder;">Update Appointment</h3>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn blue" style="text-transform:none;">Update</button>
+    <a href="{% url 'detail' object.patient.id %}" class="btn grey" style="text-transform:none;">Cancel</a>
+</form>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var modalElems = document.querySelectorAll('.modal');
+        M.Modal.init(modalElems);
+
+        var dateEl = document.getElementById('id_appointment_date');
+        if (dateEl) {
+            M.Datepicker.init(dateEl, {
+                format: 'yyyy-mm-dd',
+                defaultDate: new Date(),
+                setDefaultDate: true,
+                autoClose: true
+            });
+        }
+
+        var timeEl = document.getElementById('id_appointment_time');
+        if (timeEl) {
+            M.Timepicker.init(timeEl, {
+                twelveHour: false,
+                defaultTime: 'now',
+                autoClose: true,
+                vibrate: true
+            });
+        }
+
+        var selects = document.querySelectorAll('select');
+        M.FormSelect.init(selects);
+    });
+</script>
+{% endblock %}
