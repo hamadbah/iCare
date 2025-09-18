@@ -7,7 +7,8 @@
   <p style="font-weight: bold;"><strong>Phone:</strong> {{ profile.phone }}</p>
   <p style="font-weight: bold;"><strong>Address:</strong> {{ profile.address }}</p>
 
-  <a href="{% url 'edit_profile' %}" class="btn red waves-effect waves-light" style="text-transform:none;">
+  <a href="{% url 'edit_profile' %}" class="btn red waves-effect waves-light"
+    style="text-transform:none; font-size: 18px;">
     Edit Profile
   </a>
   {% endblock %}

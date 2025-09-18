@@ -4,8 +4,9 @@
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit" class="btn blue" style="text-transform:none;">Update</button>
-    <a href="{% url 'detail' object.patient.id %}" class="btn grey" style="text-transform:none;">Cancel</a>
+    <button type="submit" class="btn blue" style="text-transform:none; font-size: 18px;">Update</button>
+    <a href="{% url 'detail' object.patient.id %}" class="btn grey darken-2 waves-effect waves-light"
+        style="text-transform:none; font-size: 18px;">Cancel</a>
 </form>
 <script>
     document.addEventListener('DOMContentLoaded', function () {

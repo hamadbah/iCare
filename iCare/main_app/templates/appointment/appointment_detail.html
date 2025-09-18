@@ -5,14 +5,13 @@
 <h3 class="center-align" style="font-weight: bold;">Appointment Details</h3>
 <div class="flex-container" style="display: flex; gap: 20px; flex-wrap: wrap;">
     <div class="card-content">
-        <p style="font-weight: bold;"><strong>Name:</strong> {{ patient.patient_name }} - <strong>National ID:</strong>
-            {{ patient.national_id }}
-            - <strong>DOB:</strong> {{ patient.date_of_birth }} - <strong>Gender:</strong> {{ patient.gender|capfirst }}
-            - <strong>Phone:</strong> {{ patient.phone }} </p>
+        <p style="font-size: 18px; font-weight: bold;">Name: {{ patient.patient_name }} - National ID: {{ patient.national_id }}
+            - DOB: {{ patient.date_of_birth }} - Gender: {{ patient.gender|capfirst }}
+            - Phone No: {{ patient.phone }} </p>
         <hr />
-        <p style="font-weight: bold;"><strong>Date:</strong> {{ appointment.appointment_date }} - <strong>Time:</strong>
-            {{ appointment.appointment_time }} <strong>Doctor Code:</strong> {{ appointment.doctor_code }}
-            - <strong>Visit Type:</strong> {{ appointment.visit_type|capfirst }} - <strong>Status:</strong> {{ appointment.status }}</p>
+        <p style="font-size: 18px; font-weight: bold;">Appointment: {{ appointment.appointment_date }} - Time:
+            {{ appointment.appointment_time }} Doctor: {{ appointment.doctor_code }}
+            - Visit Type: {{ appointment.visit_type|capfirst }} - Status: {{ appointment.status|capfirst }}</p>
     </div>
     <div>
         <img src="{% static patient.image|cut:'main_app/static/' %}" alt="{{ patient.patient_name }}"
@@ -21,11 +20,12 @@
 
 </div>
 <div class="first" style="display: block; background: lightblue; padding: 10px; margin: 10px 0;">
-    <a id="allergyBtn" href="#allergyModal" style="text-transform:none;"
+    <a id="allergyBtn" href="#allergyModal" style="text-transform:none; font-size: 18px;"
         class="btn modal-trigger {% if patient.allergy_set.count %}red{% else %}grey darken-2{% endif %}">Allergies</a>
-    <a id="allergyBtn" href="#alertModal" style="text-transform:none;"
+    <a id="allergyBtn" href="#alertModal" style="text-transform:none; font-size: 18px;"
         class="btn modal-trigger {% if patient.alert_set.count %}red{% else %}grey darken-2{% endif %}">Alerts</a>
-    <a href="{% url 'detail' patient.id %}" class="btn grey darken-4" style="text-transform:none;">⬅ Back to Patient</a>
+    <a href="{% url 'detail' patient.id %}" class="btn grey darken-4" style="text-transform:none; font-size: 18px;">⬅
+        Back to Patient</a>
 </div>
 <div class="row" style="margin-top: 10px;">
     <div class="col s12">
@@ -43,7 +43,8 @@
 <div id="notes" class="col s12">
     {% if user.is_authenticated %}
     {% if user.profile.role == 'doctor' or user.profile.role == 'admin' %}
-    <a id="notesBtn" class="btn green modal-trigger" href="#doctornoteModal" style="text-transform:none;">➕ Doctor
+    <a id="notesBtn" class="btn green modal-trigger" href="#doctornoteModal"
+        style="text-transform:none; font-size: 18px;">➕ Doctor
         Notes</a>
     {% endif %}
     {% endif %}
@@ -83,7 +84,8 @@
     </table>
 </div>
 <div id="vitals" class="col s12">
-    <a id="vitalsBtn" class="btn green modal-trigger" href="#vitalModal" style="text-transform:none;">➕ Vitals</a>
+    <a id="vitalsBtn" class="btn green modal-trigger" href="#vitalModal" style="text-transform:none; font-size: 18px;">➕
+        Vitals</a>
     <table class="striped highlight responsive-table">
         <thead>
             <tr>
@@ -122,7 +124,8 @@
     </table>
 </div>
 <div id="labs" class="col s12">
-    <a id="labBtn" class="btn green modal-trigger" href="#labModal" style="text-transform:none;">➕ Labs</a>
+    <a id="labBtn" class="btn green modal-trigger" href="#labModal" style="text-transform:none; font-size: 18px;">➕
+        Labs</a>
     <table class="striped highlight responsive-table">
         <thead>
             <tr>
@@ -131,7 +134,11 @@
                 <th>Result</th>
                 <th>Status</th>
                 <th>Edit</th>
+                {% if user.is_authenticated %}
+                {% if user.profile.role == 'doctor' or user.profile.role == 'admin' %}
                 <th>Delete</th>
+                {% endif %}
+                {% endif %}
             </tr>
         </thead>
         <tbody>
@@ -140,9 +147,13 @@
                 <td>{{ labs.test_name|default:"-" }}</td>
                 <td>{{ labs.test_date|default:"-" }}</td>
                 <td>{{ labs.result|default:"-" }}</td>
-                <td>{{ labs.lab_status|default:"-" }}</td>
+                <td>{{ labs.lab_status|default:"-"|capfirst }}</td>
                 <td><a href="{% url 'lab-update' labs.id %}" class="btn white">✏️</a></td>
+                {% if user.is_authenticated %}
+                {% if user.profile.role == 'doctor' or user.profile.role == 'admin' %}
                 <td><a href="{% url 'lab-delete' labs.id %}" class="btn white">❌</a></td>
+                {% endif %}
+                {% endif %}
             </tr>
             {% empty %}
             <tr>
@@ -155,7 +166,8 @@
 <div id="prescriptions" class="col s12">
     {% if user.is_authenticated %}
     {% if user.profile.role == 'doctor' or user.profile.role == 'admin' %}
-    <a id="prescriptionBtn" class="btn green modal-trigger" href="#prescriptionModal" style="text-transform:none;">➕
+    <a id="prescriptionBtn" class="btn green modal-trigger" href="#prescriptionModal"
+        style="text-transform:none; font-size: 18px;">➕
         Prescriptions</a>
     {% endif %}
     {% endif %}
@@ -200,7 +212,8 @@
 <div id="orders" class="col s12">
     {% if user.is_authenticated %}
     {% if user.profile.role == 'doctor' or user.profile.role == 'admin' %}
-    <a id="ordersBtn" class="btn green modal-trigger" href="#ordersModal" style="text-transform:none;">➕ Orders</a>
+    <a id="ordersBtn" class="btn green modal-trigger" href="#ordersModal"
+        style="text-transform:none; font-size: 18px;">➕ Orders</a>
     {% endif %}
     {% endif %}
     <table class="striped highlight responsive-table">
@@ -225,8 +238,8 @@
                 <td>{{ orders.order_date|default:"-" }}</td>
                 <td>{{ orders.order_type|default:"-" }}</td>
                 <td>{{ orders.instructions|default:"-" }}</td>
-                <td>{{ orders.priority|default:"-" }}</td>
-                <td>{{ orders.order_status|default:"-" }}</td>
+                <td>{{ orders.priority|default:"-"|capfirst }}</td>
+                <td>{{ orders.order_status|default:"-"|capfirst }}</td>
                 {% if user.is_authenticated %}
                 {% if user.profile.role == 'doctor' or user.profile.role == 'admin' %}
                 <td><a href="{% url 'order-update' orders.id %}" class="btn white">✏️</a></td>
@@ -247,7 +260,8 @@
 <div id="diagnosis" class="col s12">
     {% if user.is_authenticated %}
     {% if user.profile.role == 'doctor' or user.profile.role == 'admin' %}
-    <a id="diagnosisBtn" class="btn green modal-trigger" href="#diagnosisModal" style="text-transform:none;">➕
+    <a id="diagnosisBtn" class="btn green modal-trigger" href="#diagnosisModal"
+        style="text-transform:none; font-size: 18px;">➕
         Diagnosis</a>
     {% endif %}
     {% endif %}
@@ -270,9 +284,13 @@
             <tr>
                 <td>{{ diagnosis.diagnosis_name|default:"-" }}</td>
                 <td>{{ diagnosis.diagnosis_date|default:"-" }}</td>
-                <td>{{ diagnosis.diagnosis_status|default:"-" }}</td>
+                <td>{{ diagnosis.diagnosis_status|default:"-"|capfirst }}</td>
+                {% if user.is_authenticated %}
+                {% if user.profile.role == 'doctor' or user.profile.role == 'admin' %}
                 <td><a href="{% url 'diagnosis-update' diagnosis.id %}" class="btn white">✏️</a></td>
                 <td><a href="{% url 'diagnosis-delete' diagnosis.id %}" class="btn white">❌</a></td>
+                {% endif %}
+                {% endif %}
             </tr>
             {% empty %}
             <tr>
@@ -286,7 +304,8 @@
 <div id="nursenote" class="col s12">
     {% if user.is_authenticated %}
     {% if user.profile.role == 'nurse' or user.profile.role == 'admin' %}
-    <a id="nsnoteBtn" class="btn green modal-trigger" href="#nursenoteModal" style="text-transform:none;">➕ Nurse
+    <a id="nsnoteBtn" class="btn green modal-trigger" href="#nursenoteModal"
+        style="text-transform:none; font-size: 18px;">➕ Nurse
         Note</a>
     {% endif %}
     {% endif %}
@@ -308,8 +327,12 @@
             <tr>
                 <td>{{ nursenote.note_time|default:"-" }}</td>
                 <td>{{ nursenote.note|default:"-" }}</td>
+                {% if user.is_authenticated %}
+                {% if user.profile.role == 'nurse' or user.profile.role == 'admin' %}
                 <td><a href="{% url 'nurse-note-update' nursenote.id %}" class="btn white">✏️</a></td>
                 <td><a href="{% url 'nurse-note-delete' nursenote.id %}" class="btn white">❌</a></td>
+                {% endif %}
+                {% endif %}
             </tr>
             {% empty %}
             <tr>
@@ -328,7 +351,8 @@
             {{ vitalsign_form.as_p }}
             <div class="modal-footer" style="margin-top:15px;">
                 <button type="submit" class="btn blue" style="text-transform:none;">Save</button>
-                <a href="#!" class="modal-close btn grey" style="text-transform:none;">Cancel</a>
+                <a href="#!" class="modal-close btn grey darken-2 waves-effect waves-light"
+                    style="text-transform:none;">Cancel</a>
             </div>
         </form>
     </div>
@@ -341,7 +365,8 @@
             {{ doctornote_form.as_p }}
             <div class="modal-footer" style="margin-top:15px;">
                 <button type="submit" class="btn blue" style="text-transform:none;">Save</button>
-                <a href="#!" class="modal-close btn grey" style="text-transform:none;">Cancel</a>
+                <a href="#!" class="modal-close btn grey darken-2 waves-effect waves-light"
+                    style="text-transform:none;">Cancel</a>
             </div>
         </form>
     </div>
@@ -354,7 +379,8 @@
             {{ prescription_form.as_p }}
             <div class="modal-footer" style="margin-top:15px;">
                 <button type="submit" class="btn blue" style="text-transform:none;">Save</button>
-                <a href="#!" class="modal-close btn grey" style="text-transform:none;">Cancel</a>
+                <a href="#!" class="modal-close btn grey darken-2 waves-effect waves-light"
+                    style="text-transform:none;">Cancel</a>
             </div>
         </form>
     </div>
@@ -368,7 +394,8 @@
             {{ doctororder_form.as_p }}
             <div class="modal-footer" style="margin-top:15px;">
                 <button type="submit" class="btn blue" style="text-transform:none;">Save</button>
-                <a href="#!" class="modal-close btn grey" style="text-transform:none;">Cancel</a>
+                <a href="#!" class="modal-close btn grey darken-2 waves-effect waves-light"
+                    style="text-transform:none;">Cancel</a>
             </div>
         </form>
     </div>
@@ -382,7 +409,8 @@
             {{ lab_form.as_p }}
             <div class="modal-footer" style="margin-top:15px;">
                 <button type="submit" class="btn blue" style="text-transform:none;">Save</button>
-                <a href="#!" class="modal-close btn grey" style="text-transform:none;">Cancel</a>
+                <a href="#!" class="modal-close btn grey darken-2 waves-effect waves-light"
+                    style="text-transform:none;">Cancel</a>
             </div>
         </form>
     </div>
@@ -395,7 +423,8 @@
             {{ diagnosis_form.as_p }}
             <div class="modal-footer" style="margin-top:15px;">
                 <button type="submit" class="btn blue" style="text-transform:none;">Save</button>
-                <a href="#!" class="modal-close btn grey" style="text-transform:none;">Cancel</a>
+                <a href="#!" class="modal-close btn grey darken-2 waves-effect waves-light"
+                    style="text-transform:none;">Cancel</a>
             </div>
         </form>
     </div>
@@ -409,7 +438,8 @@
             {{ nursenote_form.as_p }}
             <div class="modal-footer" style="margin-top:15px;">
                 <button type="submit" class="btn blue" style="text-transform:none;">Save</button>
-                <a href="#!" class="modal-close btn grey" style="text-transform:none;">Cancel</a>
+                <a href="#!" class="modal-close btn grey darken-2 waves-effect waves-light"
+                    style="text-transform:none;">Cancel</a>
             </div>
         </form>
     </div>

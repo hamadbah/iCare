@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 {% if object %}
-<h3 style="font-weight: bolder;">Edit <span class="teal-text">{{object.patient_name}}</span></h3>
+<h3 style="font-weight: bolder;">Patient Details</h3>
 {% else %}
 <h3 style="font-weight: bolder;">Add Patient</h3>
 {% endif %}
@@ -11,9 +11,10 @@
         {{ form.as_table }}
     </table>
     <div style="text-align: center;">
-        <input type="submit" value="Submit!" style="text-transform:none; width: 200px; max-width: 100%;" class="btn">
-        <a href="{{ object.get_absolute_url }}" class="btn grey"
-            style="text-transform:none; width: 200px; max-width: 100%;">Back</a>
+        <input type="submit" value="Submit!"
+            style="text-transform:none; width: 200px; max-width: 100%; font-size: 18px;" class="btn blue">
+        <a href="{% url 'index' %}" class="btn grey darken-2 waves-effect waves-light"
+            style="text-transform:none; width: 200px; max-width: 100%; font-size: 18px;">Back</a>
     </div>
 </form>
 <script>

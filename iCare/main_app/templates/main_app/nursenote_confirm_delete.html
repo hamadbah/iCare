@@ -2,14 +2,14 @@
 {% block content %}
 <p style="color: red; font-weight: bold; font-size: x-large;">Are you sure you want to delete these Notes?</p>
 <ul>
-    <li>Time: 
+    <li>Time:
         {% if object.note_time %}
         {{ object.note_time }}
         {% else %}
         -
         {% endif %}
     </li>
-    <li>Note: 
+    <li>Note:
         {% if object.note %}
         {{ object.note }}
         {% else %}
@@ -19,7 +19,8 @@
 </ul>
 <form method="post">
     {% csrf_token %}
-    <button type="submit" class="btn red" style="text-transform:none;">Delete</button>
-    <a href="{% url 'appointment_detail' object.appointment.id %}#nursenote" class="btn grey" style="text-transform:none;">Cancel</a>
+    <button type="submit" class="btn red" style="text-transform:none; font-size: 18px;">Delete</button>
+    <a href="{% url 'appointment_detail' object.appointment.id %}#nursenote"
+        class="btn grey darken-2 waves-effect waves-light" style="text-transform:none; font-size: 18px;">Cancel</a>
 </form>
 {% endblock %}

@@ -5,11 +5,12 @@
 <ul>
     <li>Allergy Nmae: {{ object.allerg_name|default:"-" }}</li>
     <li>Severity: {{ object.severity|default:"-" }}</li>
-    <li>Status: {{ object.allergy_status|default:"-" }}</li>
+    <li>Status: {{ object.allergy_status|default:"-"|capfirst }}</li>
 </ul>
 <form method="post">
     {% csrf_token %}
-    <button type="submit" class="btn red" style="text-transform:none;">Delete</button>
-    <a href="{% url 'detail' object.patient.id %}" class="btn grey" style="text-transform:none;">Cancel</a>
+    <button type="submit" class="btn red" style="text-transform:none; font-size: 18px;">Delete</button>
+    <a href="{% url 'detail' object.patient.id %}" class="btn grey darken-2 waves-effect waves-light"
+        style="text-transform:none; font-size: 18px;">Cancel</a>
 </form>
 {% endblock %}

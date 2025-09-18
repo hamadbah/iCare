@@ -4,10 +4,11 @@
 <div class="patient-details">
     <div>
         <h5 style="font-weight: bolder;">{{ patient.patient_name }}</h5>
-        <p><strong>National ID:</strong> {{ patient.national_id }} - <strong>DOB:</strong> {{ patient.date_of_birth }}
+        <p style="font-size: 18px; font-weight: bold;">National ID: {{ patient.national_id }} - DOB: {{
+            patient.date_of_birth }}
         </p>
-        <p><strong>Gender:</strong> {{ patient.gender }} - <strong>Phone:</strong> {{ patient.phone }} -
-            <strong>Address:</strong> {{ patient.address }}
+        <p style="font-size: 18px; font-weight: bold;">Gender: {{ patient.gender }} - Phone No: {{ patient.phone }} -
+            Address: {{ patient.address }}
         </p>
     </div>
     <div class="card-image">
@@ -17,10 +18,11 @@
 </div>
 <div class="patient-summary">
     <div>
-        <h3 style="font-weight: bolder;">Summary Page</h3>
+        <h3 style="font-weight: bolder; color: blue;">Summary Page</h3>
     </div>
     <div>
-        <a href="{% url 'detail' patient.id %}" class="btn grey" style="text-transform:none;">Back</a>
+        <a href="{% url 'detail' patient.id %}" class="btn grey darken-2 waves-effect waves-light"
+            style="text-transform:none; font-size: 18px;">Back</a>
     </div>
 </div>
 <div class="row" style="display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; margin-top: 30px;">
@@ -125,12 +127,13 @@
             {% endfor %}
         </ul>
     </div>
-    
+
     <div class="card">
         <h5 style="font-weight: bolder; color: maroon">Diagnosis</h5>
         <ul>
             {% for diag in diagnosis %}
-            <li><strong>Diagnosis Name: </strong> {{ diag.diagnosis_name }} <strong>Date: </strong> {{ diag.diagnosis_date }}
+            <li><strong>Diagnosis Name: </strong> {{ diag.diagnosis_name }} <strong>Date: </strong> {{
+                diag.diagnosis_date }}
                 <strong>Status: </strong> {{ diag.diagnosis_status }}
             </li>
             {% empty %}

@@ -2,21 +2,21 @@
 {% block content %}
 <p style="color: red; font-weight: bold; font-size: x-large;">Are you sure you want to delete these Notes?</p>
 <ul>
-    <li>Subjective: 
+    <li>Subjective:
         {% if object.subjective %}
         {{ object.subjective }}
         {% else %}
         -
         {% endif %}
     </li>
-    <li>Objective: 
+    <li>Objective:
         {% if object.objective %}
         {{ object.objective }}
         {% else %}
         -
         {% endif %}
     </li>
-    <li>Plan: 
+    <li>Plan:
         {% if object.plan %}
         {{ object.plan }}
         {% else %}
@@ -26,7 +26,8 @@
 </ul>
 <form method="post">
     {% csrf_token %}
-    <button type="submit" class="btn red" style="text-transform:none;">Delete</button>
-    <a href="{% url 'appointment_detail' object.appointment.id %}#notes" class="btn grey" style="text-transform:none;">Cancel</a>
+    <button type="submit" class="btn red" style="text-transform:none; font-size: 18px;">Delete</button>
+    <a href="{% url 'appointment_detail' object.appointment.id %}#notes"
+        class="btn grey darken-2 waves-effect waves-light" style="text-transform:none; font-size: 18px;">Cancel</a>
 </form>
 {% endblock %}

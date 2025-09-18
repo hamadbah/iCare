@@ -7,38 +7,38 @@
 <h3 style="font-weight: bolder;">Welcome to iCare EMR</h3>
 <hr />
 <p style="font-size: x-large;">With iCare EMR, patient data is always safe. Advanced encryption and strict access
-    controls protect sensitive information,
-    ensuring full compliance with healthcare regulations. Authorized staff can quickly access critical information while
-    maintaining complete confidentiality.
+  controls protect sensitive information,
+  ensuring full compliance with healthcare regulations. Authorized staff can quickly access critical information while
+  maintaining complete confidentiality.
 </p>
 
 <div class="carousel carousel-slider center" data-indicators="true">
-    <div class="carousel-item" href="#one!">
-        <img src="{% static 'images/1.jpg' %}" alt="Slide 1">
-    </div>
-    <div class="carousel-item" href="#two!">
-        <img src="{% static 'images/2.jpg' %}" alt="Slide 2">
-    </div>
-    <div class="carousel-item" href="#three!">
-        <img src="{% static 'images/4.jpg' %}" alt="Slide 3">
-    </div>
+  <div class="carousel-item" href="#one!">
+    <img src="{% static 'images/1.jpg' %}" alt="Slide 1">
+  </div>
+  <div class="carousel-item" href="#two!">
+    <img src="{% static 'images/2.jpg' %}" alt="Slide 2">
+  </div>
+  <div class="carousel-item" href="#three!">
+    <img src="{% static 'images/4.jpg' %}" alt="Slide 3">
+  </div>
 </div>
 
 <p style="font-size: x-large;">It minimizes paperwork and manual tasks, allowing healthcare providers to focus on
-    patient care.
-    Features like automated appointment scheduling, electronic prescriptions, and real-time updates on patient health
-    records make your practice more efficient and organized.
+  patient care.
+  Features like automated appointment scheduling, electronic prescriptions, and real-time updates on patient health
+  records make your practice more efficient and organized.
 </p>
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function () {
     var elems = document.querySelectorAll('.carousel');
     var instances = M.Carousel.init(elems, {
       fullWidth: true,
       indicators: true
     });
 
-    setInterval(function() {
-      instances.forEach(function(instance) {
+    setInterval(function () {
+      instances.forEach(function (instance) {
         instance.next();
       });
     }, 3000);

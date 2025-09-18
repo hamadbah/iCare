@@ -5,11 +5,12 @@
 <ul>
     <li>Diagnosis Name: {{ object.diagnosis_name }}</li>
     <li>Date: {{ object.diagnosis_date }}</li>
-    <li>Status: {{ object.diagnosis_status }}</li>
+    <li>Status: {{ object.diagnosis_status|capfirst }}</li>
 </ul>
 <form method="post">
     {% csrf_token %}
-    <button type="submit" class="btn red" style="text-transform:none;">Delete</button>
-    <a href="{% url 'appointment_detail' object.appointment.id %}#diagnosis" class="btn grey" style="text-transform:none;">Cancel</a>
+    <button type="submit" class="btn red" style="text-transform:none; font-size: 18px;">Delete</button>
+    <a href="{% url 'appointment_detail' object.appointment.id %}#diagnosis"
+        class="btn grey darken-2 waves-effect waves-light" style="text-transform:none; font-size: 18px;">Cancel</a>
 </form>
 {% endblock %}

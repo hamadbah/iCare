@@ -33,9 +33,6 @@
                 <ul class="right">
                     <li><a href="{% url 'about' %}">About</a></li>
                     {% if user.is_authenticated %}
-                    {% if user.profile.role == 'clerk' or user.profile.role == 'admin' %}
-                    <li><a href="{% url 'patient_create' %}">Add Patient</a></li>
-                    {% endif %}
                     <li><a href="{% url 'index' %}">View All Patients</a></li>
                     {% if user.profile.role == 'doctor' or user.profile.role == 'admin' %}
                     <li><a href="{% url 'todays_appointment' %}">Today's Appointments</a></li>

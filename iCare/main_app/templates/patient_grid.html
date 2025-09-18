@@ -16,7 +16,17 @@
         <nav>
             <div class="nav-wrapper indigo darken-4">
                 <ul>
-                    <li><a href="{% url 'home' %}" class="left brand-logo">&nbsp;&nbsp;&nbsp;iCare</a></li>
+                    <li>
+                        <a href="{% url 'home' %}" class="left brand-logo">
+                            <img src="{% static 'images/logo-2.png' %}" alt="iCare Logo"
+                                style="width:100px; height:55px; border-radius:50%; vertical-align: middle;">
+                            {% if user.is_authenticated %}
+                            {{ user.username|upper }}
+                            {% else %}
+                            Guest
+                            {% endif %}
+                        </a>
+                    </li>
                 </ul>
                 <ul class="right">
                     <li><a href="{% url 'about' %}">About</a></li>

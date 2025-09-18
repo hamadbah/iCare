@@ -6,14 +6,14 @@
 <div class="card">
     <div class="flex-container" style="display: flex; gap: 20px; flex-wrap: wrap;">
         <div class="card-content">
-            <p style="font-weight: bold;">
-                <strong>Name:</strong> {{ patient.patient_name }} -
-                <strong>National ID:</strong> {{ patient.national_id }} -
-                <strong>DOB:</strong> {{ patient.date_of_birth }}
+            <p style="font-size: 18px; font-weight: bold;">
+                Name: {{ patient.patient_name }} -
+                National ID: {{ patient.national_id }} -
+                DOB: {{ patient.date_of_birth }}
             </p>
-            <p style="font-weight: bold;">
-                <strong>Gender:</strong> {{ patient.gender|capfirst }} -
-                <strong>Phone:</strong> {{ patient.phone }}
+            <p style="font-size: 18px; font-weight: bold;">
+                Gender: {{ patient.gender|capfirst }} -
+                Phone No: {{ patient.phone }}
             </p>
         </div>
         <div>
@@ -24,18 +24,24 @@
     <div class="card-action">
         {% if user.is_authenticated %}
         {% if user.profile.role == 'admin' %}
-        <a href="{% url 'patient_delete' patient.id %}" class="btn red" style="text-transform:none;">Delete</a>
+        <a href="{% url 'patient_delete' patient.id %}" class="btn red"
+            style="text-transform:none; font-size: 18px;">Delete</a>
         {% endif %}
         {% if user.profile.role == 'admin' or user.profile.role == 'clerk' %}
-        <a href="{% url 'patient_update' patient.id %}" class="btn blue" style="text-transform:none;">Edit</a>
-        <a href="{% url 'index' %}" class="btn grey" style="text-transform:none;">Back</a>
-        <a class="btn modal-trigger" href="#appointmentModal" style="text-transform:none;">Add Appointment</a>
+        <a href="{% url 'patient_update' patient.id %}" class="btn blue"
+            style="text-transform:none; font-size: 18px;">Edit</a>
+        <a href="{% url 'index' %}" class="btn grey" style="text-transform:none; font-size: 18px;">Back</a>
+        <a class="btn modal-trigger" href="#appointmentModal" style="text-transform:none; font-size: 18px;">Add
+            Appointment</a>
         {% endif %}
         {% if user.profile.role == 'admin' or user.profile.role == 'doctor' or user.profile.role == 'nurse' %}
-        <a href="{% url 'patient_summary' patient.id %}" class="btn blue" style="text-transform:none;">View Patient
+        <a href="{% url 'patient_summary' patient.id %}" class="btn blue"
+            style="text-transform:none; font-size: 18px;">View Patient
             Summary</a>
-        <a class="btn orange modal-trigger" href="#alertModal" style="text-transform:none;">Add Alert</a>
-        <a class="btn orange modal-trigger" href="#allergyModal" style="text-transform:none;">Add Allergy</a>
+        <a class="btn orange modal-trigger" href="#alertModal" style="text-transform:none; font-size: 18px;">Add
+            Alert</a>
+        <a class="btn orange modal-trigger" href="#allergyModal" style="text-transform:none; font-size: 18px;">Add
+            Allergy</a>
         {% endif %}
         {% endif %}
     </div>
@@ -191,7 +197,7 @@
 
 <div id="alertModal" class="modal">
     <div class="modal-content">
-        <h4>Add Alert</h4>
+        <h3 style="font-weight: bolder;">Add Alert</h3>
         <form id="alertForm" action="{% url 'add_alert' patient.id %}" method="post">
             {% csrf_token %}
             {{ alert_form.as_p }}
@@ -205,7 +211,7 @@
 
 <div id="allergyModal" class="modal">
     <div class="modal-content">
-        <h4>Add Allergy</h4>
+        <h3 style="font-weight: bolder;">Add Allergy</h3>
         <form id="allergyForm" action="{% url 'add_allergy' patient.id %}" method="post">
             {% csrf_token %}
             {{ allergy_form.as_p }}
