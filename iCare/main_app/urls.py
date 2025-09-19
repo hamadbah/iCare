@@ -51,4 +51,5 @@ urlpatterns = [
     path('appointment/today/', views.todays_appointments, name='todays_appointment'),
     path('dashboard/', views.doctor_dashboard, name='doctor_dashboard'),
     path('appointment/nurses/', views.todays_appt_nurses, name='nurses_list'),
+    path('appointment/<int:appointment_id>/pdf/', views.appointment_summary_pdf, name='appointment-summary-pdf'),
 ]

@@ -26,6 +26,10 @@
         class="btn modal-trigger {% if patient.alert_set.count %}red{% else %}grey darken-2{% endif %}">Alerts</a>
     <a href="{% url 'detail' patient.id %}" class="btn grey darken-4" style="text-transform:none; font-size: 18px;">⬅
         Back to Patient</a>
+    <a href="{% url 'appointment-summary-pdf' appointment.id %}" class="btn white" target="_blank"
+        style="text-transform:none; font-size: 18px;">
+        🖨
+    </a>
 </div>
 <div class="row" style="margin-top: 10px;">
     <div class="col s12">

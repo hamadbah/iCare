@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.http import HttpResponse
 from .forms import ProfileForm, AppointmentForm, VitalSignForm, DoctorNoteForm, PrescriptionForm, LabForm, DiagnosisForm, UserUpdateForm, ProfileUpdateForm, NurseNoteForm, DoctorOrderForm, AlertForm, AllergyForm
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
@@ -13,6 +12,12 @@ from django.db.models import Q
 import requests, re
 from django.utils.timezone import localtime
 from django.db.models import Count
+from django.template.loader import render_to_string
+from django.http import HttpResponse
+from weasyprint import HTML
+import tempfile
+from django.shortcuts import get_object_or_404
+
 
 
 OLLAMA_URL = "http://localhost:11434/v1/chat/completions"
@@ -491,3 +496,25 @@ def todays_appt_nurses(request):
         'appointments': appointments,
         'today': today
     })
+
+@login_required    
+def appointment_summary_pdf(request, appointment_id):
+    appointment = Appointment.objects.get(id=appointment_id)
+    patient = appointment.patient
+    today = localtime().date()
+    
+    html_string = render_to_string('appointment_summary_pdf.html',{
+        'appointment': appointment,
+        'patient': patient,
+        'today': today
+    })
+    
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'inline; filename="appointment_{appointment_id}_summary.pdf"'
+    
+    with tempfile.NamedTemporaryFile(delete=True) as output:
+        HTML(string=html_string, base_url=request.build_absolute_uri()).write_pdf(target=output.name)
+        output.seek(0)
+        response.write(output.read())
+        
+    return response
