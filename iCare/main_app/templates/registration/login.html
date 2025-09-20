@@ -1,9 +1,35 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>Log In</h1>
-<form method="post" action="{% url 'login' %}">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <input type="submit" class="btn blue" style="text-transform:none;" value="Login">
-</form>
+<div class="container" style="max-width: 400px; margin-top: 60px;">
+  <div class="card z-depth-3" style="padding: 25px; border-radius: 12px;">
+    <h4 class="center-align">Log In</h4>
+    
+    <form method="post" action="{% url 'login' %}">
+      {% csrf_token %}
+      <div class="input-field">
+        {{ form.username.label_tag }}
+        {{ form.username }}
+        {% if form.username.errors %}
+          <span class="red-text small">{{ form.username.errors }}</span>
+        {% endif %}
+      </div>
+      <div class="input-field">
+        {{ form.password.label_tag }}
+        {{ form.password }}
+        {% if form.password.errors %}
+          <span class="red-text small">{{ form.password.errors }}</span>
+        {% endif %}
+      </div>
+      <div class="center-align" style="margin-top: 25px;">
+        <button type="submit" class="btn blue" style="width: 100%; text-transform:none;">
+          Login
+        </button>
+      </div>
+    </form>
+
+    <div class="center-align" style="margin-top: 20px;">
+      <p>Don't have an account? <a href="{% url 'signup' %}">Sign Up</a></p>
+    </div>
+  </div>
+</div>
 {% endblock %}

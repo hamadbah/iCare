@@ -51,18 +51,15 @@ def about(request):
 
 
 def signup(request):
-    error_message = ''
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
             return redirect('home')
-        else:
-            error_message = 'Invalid signup - Please try again later'
-    form = UserCreationForm()
-    context = {'form': form, 'error_message': error_message}
-    return render(request, 'registration/signup.html', context)
+    else:
+        form = UserCreationForm()
+    return render(request, 'registration/signup.html', {'form': form})
 
 @login_required
 def edit_profile(request):
